@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Augusto Segura — Software Engineer & Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05060d;--ink:#eef2fb;--muted:#8a93a6;--line:rgba(255,255,255,.09);
+    --cyan:#22d3ee;--teal:#2dd4bf;--green:#34d399;--lime:#4ade80;
+    --amber:#ffb347;--violet:#9b8cff;--pink:#ff5da2;--blue:#5fa8ff;
+    --card:rgba(255,255,255,.03);--maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,.display{font-family:'Sora',sans-serif;letter-spacing:-.02em;line-height:1.05}
+  a{color:inherit;text-decoration:none}
+  #scene{position:fixed;inset:0;z-index:0;display:block}
+  .content{position:relative;z-index:2}
+
+  #loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .8s}
+  #loader.hide{opacity:0;pointer-events:none}
+  #loader .ring{width:52px;height:52px;border:2px solid rgba(255,255,255,.12);border-top-color:var(--cyan);border-radius:50%;animation:spin 1s linear infinite}
+  #loader .lbl{font-family:'Sora';font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  #loader .pct{font-family:'Sora';font-size:13px;color:var(--cyan)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  nav{position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:6px;align-items:center;
+    padding:8px 10px;border-radius:999px;background:rgba(12,16,26,.55);backdrop-filter:blur(14px);border:1px solid var(--line)}
+  nav a{font-size:14px;color:var(--muted);padding:7px 15px;border-radius:999px;transition:.25s}
+  nav a:hover{color:var(--ink)}
+  nav a.active{color:var(--cyan);background:rgba(34,211,238,.10)}
+  @media(max-width:640px){nav{gap:2px;padding:6px 7px}nav a{padding:6px 10px;font-size:12px}}
+
+  .phase{min-height:100vh;position:relative;display:flex;align-items:center}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,48px);width:100%}
+
+  #home{height:150vh}
+  #home .pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;pointer-events:none}
+  /* hero content sits middle-left */
+  .hero-hello{display:flex;flex-direction:column;gap:10px;pointer-events:auto;
+    max-width:560px;align-items:flex-start}
+  .hello__div{display:flex;flex-direction:column;width:min(56vw,560px);margin:0}
+  .hello__svg{
+    fill:none;
+    stroke:#fff;
+    stroke-linecap:round;
+    stroke-miterlimit:10;
+    stroke-width:48px;
+    stroke-dasharray:5800px;
+    stroke-dashoffset:5800px;
+    animation:anim__hello linear 5s forwards;
+    width:100%;height:auto;display:block;
+    filter:drop-shadow(0 0 24px rgba(150,205,255,.5)) drop-shadow(0 8px 40px rgba(120,190,255,.3));
+  }
+  @keyframes anim__hello{
+    0%{stroke-dashoffset:5800}
+    25%{stroke-dashoffset:5800}
+    100%{stroke-dashoffset:0}
+  }
+  .g-sub{font-size:clamp(15px,2.2vw,20px);color:#c2c9d6;font-weight:500;letter-spacing:.02em;
+    margin-left:6px;opacity:0;transform:translateY(14px);animation:gIn .8s 4.6s forwards}
+  @keyframes gIn{to{opacity:1;transform:none}}
+  .scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;
+    align-items:center;gap:9px;color:var(--muted);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    opacity:0;animation:gIn 1s 2s forwards}
+  .scroll-cue i{width:22px;height:34px;border:2px solid var(--line);border-radius:12px;position:relative}
+  .scroll-cue i::after{content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);width:3px;height:7px;
+    border-radius:2px;background:var(--cyan);animation:cueBob 1.5s infinite}
+  @keyframes cueBob{0%,100%{opacity:1;top:6px}50%{opacity:.3;top:16px}}
+
+  .eyebrow{font-size:13px;letter-spacing:.25em;text-transform:uppercase;margin-bottom:16px}
+  .phase h2{font-size:clamp(30px,5vw,54px);font-weight:700;margin-bottom:22px}
+  .lead{color:#c2c9d6;font-size:clamp(15px,2vw,18px);max-width:62ch}
+  .lead strong{color:var(--ink);font-weight:600}
+
+  .glass{background:linear-gradient(180deg,rgba(10,14,22,.74),rgba(10,14,22,.56));backdrop-filter:blur(10px);
+    border:1px solid var(--line);border-radius:22px;padding:clamp(24px,4vw,44px)}
+
+  /* ABOUT: text left, 3D depth portrait right */
+  .about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,54px);align-items:center}
+  .depth-wrap{position:relative;width:100%;aspect-ratio:3/4;max-width:420px;justify-self:center;
+    border-radius:22px;overflow:hidden;cursor:grab;
+    box-shadow:0 24px 70px rgba(0,0,0,.45)}
+  .depth-wrap:active{cursor:grabbing}
+  .depth-wrap canvas{width:100%;height:100%;display:block}
+  @media(max-width:900px){
+    .about-grid{grid-template-columns:1fr}
+    .depth-wrap{max-width:320px;margin-top:8px}
+  }
+
+  .cert-btn{margin-top:28px;cursor:pointer;font-family:inherit;gap:10px;font-size:15px;font-weight:700;
+    background:linear-gradient(135deg,#ffd76a,#ffb347 55%,#e8952a);
+    color:#3a2600;
+    border:1px solid rgba(255,215,106,.6);
+    box-shadow:0 6px 24px rgba(255,179,71,.28)}
+  .cert-btn:hover{
+    background:linear-gradient(135deg,#ffe08a,#ffc25c 55%,#f2a23a);
+    box-shadow:0 10px 32px rgba(255,179,71,.45);
+    transform:translateY(-2px)}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+  .stat{border-top:1px solid var(--line);padding-top:16px}
+  .stat .num{font-family:'Sora';font-size:clamp(24px,4vw,38px);font-weight:700}
+  .stat .num.a{color:var(--amber)}.stat .num.c{color:var(--cyan)}.stat .num.v{color:var(--violet)}
+  .stat .cap{color:var(--muted);font-size:13px;margin-top:2px}
+  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .tab{display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border-radius:12px;cursor:pointer;
+    font-size:14px;font-weight:600;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--muted);transition:.25s;user-select:none}
+  .tab .ico{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#08110f}
+  .tab .ico-img{background:#fff;overflow:hidden;padding:2px}
+  .tab .ico-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .tab:hover{color:var(--ink);transform:translateY(-2px)}
+  .tab.on{color:#fff;border-color:transparent}
+  .tab.on.r{background:linear-gradient(120deg,rgba(232,90,79,.22),rgba(232,90,79,.06));border-color:rgba(232,90,79,.5);box-shadow:0 0 24px rgba(232,90,79,.15)}
+  .tab.on.c{background:linear-gradient(120deg,rgba(34,211,238,.22),rgba(34,211,238,.06));border-color:rgba(34,211,238,.5);box-shadow:0 0 24px rgba(34,211,238,.15)}
+  .tab.on.g{background:linear-gradient(120deg,rgba(52,211,153,.22),rgba(52,211,153,.06));border-color:rgba(52,211,153,.5);box-shadow:0 0 24px rgba(52,211,153,.15)}
+  .tab.on.v{background:linear-gradient(120deg,rgba(155,140,255,.22),rgba(155,140,255,.06));border-color:rgba(155,140,255,.5);box-shadow:0 0 24px rgba(155,140,255,.15)}
+  .tab.on.a{background:linear-gradient(120deg,rgba(255,179,71,.22),rgba(255,179,71,.06));border-color:rgba(255,179,71,.5);box-shadow:0 0 24px rgba(255,179,71,.15)}
+  .tab.on.p{background:linear-gradient(120deg,rgba(255,93,162,.22),rgba(255,93,162,.06));border-color:rgba(255,93,162,.5);box-shadow:0 0 24px rgba(255,93,162,.15)}
+  .tab.on.b{background:linear-gradient(120deg,rgba(95,168,255,.22),rgba(95,168,255,.06));border-color:rgba(95,168,255,.5);box-shadow:0 0 24px rgba(95,168,255,.15)}
+
+  .panel{display:none;animation:fade .5s}
+  .panel.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .pcard{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start}
+  .pcard .logo{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-family:'Sora';font-weight:800;font-size:22px;color:#07110f}
+  .pcard .logo.logo-img{background:#fff;padding:8px;overflow:hidden}
+  .pcard .logo.logo-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .pcard h3{font-size:24px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .pcard .role{font-size:13px;color:var(--muted);font-weight:500}
+  .pcard p{color:#c2c9d6;font-size:15px;margin:12px 0 16px;max-width:64ch}
+  .pcard .stack{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .pcard .stack span{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid var(--line);transition:.25s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.live{background:var(--ink);color:#0a0d14;border-color:var(--ink)}
+  .btn.live:hover{background:var(--cyan);border-color:var(--cyan)}
+  @media(max-width:560px){.pcard{grid-template-columns:1fr}}
+
+  .witem{display:grid;grid-template-columns:120px 1fr;gap:24px;padding:18px 0;border-top:1px solid var(--line)}
+  .witem:first-child{border-top:none}
+  .witem .date{font-family:'Sora';color:var(--muted);font-size:14px}
+  .witem h4{font-size:19px;font-weight:600}
+  .witem .r{font-size:13px;margin:3px 0 8px}
+  .witem p{color:#b9c0cd;font-size:14px;max-width:62ch}
+  @media(max-width:560px){.witem{grid-template-columns:1fr;gap:5px}}
+
+  #skills-strip{overflow:hidden;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:34px}
+
+  /* orbiting logo ring around the projects box */
+  .proj-stage{position:relative;display:flex;align-items:center;justify-content:center}
+  #projects,#work{transition:opacity .4s ease}
+  .orbit-ring{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1;pointer-events:none}
+  .orbit-ring .orb{position:absolute;left:0;top:0;display:flex;align-items:center;gap:8px;
+    transform:translate(-50%,-50%);white-space:nowrap;
+    background:rgba(12,16,26,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;padding:7px 13px 7px 8px;font-size:13px;font-weight:600;color:#eef2fb;
+    box-shadow:0 4px 18px rgba(0,0,0,.3)}
+  .orbit-ring .orb svg{width:18px;height:18px;flex:none}
+  .proj-stage .glass{position:relative;z-index:2}
+  @media(max-width:760px){.orbit-ring{display:none}}  /* hide ring on small screens */
+
+  .marquee{display:flex;gap:16px;width:max-content;animation:scroll 30s linear infinite}
+  .chip{font-family:'Sora';font-weight:600;font-size:clamp(16px,2.4vw,24px);color:var(--muted);white-space:nowrap;opacity:.5}
+  .chip .d{color:var(--cyan);margin:0 14px}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  #contact .grid{display:grid;grid-template-columns:1.4fr .8fr;gap:34px}
+  @media(max-width:760px){#contact .grid{grid-template-columns:1fr}}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:14px;font-weight:600;margin-bottom:7px}
+  .field input,.field textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;
+    padding:13px 15px;color:var(--ink);font-family:inherit;font-size:15px;transition:.2s}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--cyan);background:rgba(34,211,238,.05)}
+  .field textarea{resize:vertical;min-height:150px}
+  .sendbtn{width:100%;padding:15px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);
+    color:var(--ink);font-family:'Sora';font-weight:600;font-size:15px;cursor:pointer;transition:.25s}
+  .sendbtn:hover{background:var(--cyan);color:#0a0d14;border-color:var(--cyan)}
+  .social{display:flex;flex-direction:column;gap:12px}
+  .social a{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.02);transition:.25s;font-weight:500}
+  .social a:hover{transform:translateY(-2px);border-color:var(--cyan);background:rgba(34,211,238,.06)}
+  .social .si-img{background:#fff;overflow:hidden;padding:5px}
+  .social .si-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .social .si{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none;font-weight:700;color:#fff}
+  .social small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+  footer{position:relative;z-index:2;text-align:center;color:var(--muted);font-size:14px;padding:34px 20px;
+    background:var(--bg);border-top:1px solid var(--line)}
+  footer .h{color:var(--pink)}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  /* ===== your liquid-glass card ===== */
+  .d-glass-card{position:relative;overflow:hidden;border-radius:32px}
+  .d-glass-card-morph{position:absolute;inset:0;z-index:0;backdrop-filter:blur(2px);filter:url(#liquid-glass);border-radius:inherit; background:rgba(8,11,18,.72)}
+  .d-glass-card-item{position:relative;z-index:3;border-radius:inherit;height:100%;width:100%}
+  .d-glass-card-border{position:absolute;inset:0;z-index:2;border-radius:inherit;
+    box-shadow:inset 2px 2px 2px 0 rgba(255,255,255,.2), inset -2px -2px 2px 0 rgba(255,255,255,.2)}
+  .d-glass-card-corner{position:absolute;inset:0;z-index:1;border-radius:inherit;
+    box-shadow:0 4px 4px rgba(0,0,0,.15), 0 0 12px rgba(0,0,0,.08)}
+
+  /* project buttons row */
+  .pbtns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn.more{background:transparent;color:var(--ink);border:1px solid var(--line);cursor:pointer;font-family:inherit}
+  .btn.more:hover{border-color:var(--cyan);background:rgba(34,211,238,.08)}
+
+/* full-screen detail overlay */
+  .proj-detail{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+    padding:clamp(16px,4vw,60px);opacity:0;pointer-events:none;transition:opacity .5s ease}
+  .proj-detail.open{opacity:1;pointer-events:auto}
+  .pd-card{width:min(1150px,95vw);height:min(88vh,900px)}
+  .pd-inner{display:flex;flex-direction:column;padding:0;overflow:hidden}
+
+  /* TWO PANES: text scrolls on the left, images scroll on the right */
+  .pd-scroll{display:grid;grid-template-columns:1fr 300px;gap:0;height:100%;overflow:hidden;padding:0}
+
+  /* LEFT — the text */
+  .pd-text{overflow-y:auto;padding:clamp(28px,4vw,52px);
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+  .pd-text::-webkit-scrollbar{width:8px}
+  .pd-text::-webkit-scrollbar-track{background:transparent}
+  .pd-text::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:99px}
+  .pd-text::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.32)}
+
+  /* RIGHT — the image strip */
+  .pd-gallery{overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:14px;
+    border-left:1px solid var(--line);background:rgba(0,0,0,.28);
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+  .pd-gallery::-webkit-scrollbar{width:6px}
+  .pd-gallery::-webkit-scrollbar-track{background:transparent}
+  .pd-gallery::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:99px}
+  .pd-gallery .shot{width:100%;aspect-ratio:16/10;border-radius:8px;flex:none;
+    border:1px solid var(--line);overflow:hidden;background:rgba(255,255,255,.04);
+    cursor:zoom-in;position:relative;transition:border-color .25s}
+  .pd-gallery .shot:hover{border-color:var(--cyan)}
+  .pd-gallery .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+  .pd-gallery .shot:hover img{transform:scale(1.08)}
+
+  /* LIGHTBOX — click a thumbnail to blow it up */
+  .lightbox{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;
+    padding:clamp(20px,4vw,60px);background:rgba(3,5,10,.92);backdrop-filter:blur(8px);
+    opacity:0;pointer-events:none;transition:opacity .3s ease}
+  .lightbox.open{opacity:1;pointer-events:auto}
+  .lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:12px;
+    box-shadow:0 30px 90px rgba(0,0,0,.7);transform:scale(.94);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  .lightbox.open img{transform:scale(1)}
+  .lb-close{position:absolute;top:24px;right:28px;width:46px;height:46px;border-radius:50%;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:20px;
+    cursor:pointer;display:grid;place-items:center;transition:.25s}
+  .lb-close:hover{background:rgba(255,255,255,.25);transform:rotate(90deg)}
+  /* prev / next arrows */
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:22px;
+    cursor:pointer;display:grid;place-items:center;transition:.25s}
+  .lb-nav:hover{background:rgba(255,255,255,.22)}
+  .lb-prev{left:26px} .lb-next{right:26px}
+  .lb-count{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    color:var(--muted);font-size:13px;letter-spacing:.1em}
+
+  .pd-close{position:absolute;top:18px;right:20px;z-index:5;width:42px;height:42px;border-radius:50%;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;cursor:pointer;
+    display:grid;place-items:center;transition:.25s}
+  .pd-close:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+
+  .pd-eyebrow{font-size:13px;letter-spacing:.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+  .pd-title{font-size:clamp(28px,4vw,46px);font-weight:700;margin-bottom:8px}
+  .pd-role{color:var(--muted);font-size:15px;margin-bottom:22px}
+  .pd-desc{color:#dfe6f2;font-size:16px;line-height:1.75;margin-bottom:28px;white-space:pre-line}
+  .pd-links{display:flex;gap:12px;flex-wrap:wrap}
+
+  @media(max-width:800px){
+    .pd-scroll{grid-template-columns:1fr;overflow-y:auto}
+    .pd-gallery{border-left:none;display:grid;grid-template-columns:1fr 1fr;overflow:visible}
+  }
+
+  /* work item: logo under the date on the left */
+  .witem .wlogo{width:54px;height:54px;border-radius:12px;background:#fff;padding:6px;margin-top:10px;overflow:hidden}
+  .witem .wlogo img{width:100%;height:100%;object-fit:contain;display:block}
+  .witem .wbtn{margin-top:12px}
+
+  
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.g-eyebrow,.g-name .gl,.g-sub,.scroll-cue{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- liquid glass distortion filter -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <filter id="liquid-glass">
+    <feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="2" seed="5" result="turbulence"/>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div id="loader"><div class="ring"></div><div class="lbl">Loading</div><div class="pct" id="pct">0%</div></div>
+<canvas id="scene"></canvas>
+
+<div class="content">
+<nav id="nav">
+  <a href="#home" class="active">home</a>
+  <a href="#about">about</a>
+  <a href="#projects">projects</a>
+  <a href="#work">work</a>
+  <a href="#contact">contact</a>
+</nav>
+
+<section class="phase" id="home">
+  <div class="pin"><div class="wrap">
+    <div class="hero-hello" id="helloWrap">
+      <div class="hello__div">
+        <svg class="hello__svg" viewBox="0 0 1230.94 414.57" aria-label="hello" role="img">
+          <path d="M-293.58-104.62S-103.61-205.49-60-366.25c9.13-32.45,9-58.31,0-74-10.72-18.82-49.69-33.21-75.55,31.94-27.82,70.11-52.22,377.24-44.11,322.48s34-176.24,99.89-183.19c37.66-4,49.55,23.58,52.83,47.92a117.06,117.06,0,0,1-3,45.32c-7.17,27.28-20.47,97.67,33.51,96.86,66.93-1,131.91-53.89,159.55-84.49,31.1-36.17,31.1-70.64,19.27-90.25-16.74-29.92-69.47-33-92.79,16.73C62.78-179.86,98.7-93.8,159-81.63S302.7-99.55,393.3-269.92c29.86-58.16,52.85-114.71,46.14-150.08-7.44-39.21-59.74-54.5-92.87-8.7-47,65-61.78,266.62-34.74,308.53S416.62-58,481.52-130.31s133.2-188.56,146.54-256.23c14-71.15-56.94-94.64-88.4-47.32C500.53-375,467.58-229.49,503.3-127a73.73,73.73,0,0,0,23.43,33.67c25.49,20.23,55.1,16,77.46,6.32a111.25,111.25,0,0,0,30.44-19.87c37.73-34.23,29-36.71,64.58-127.53C724-284.3,785-298.63,821-259.13a71,71,0,0,1,13.69,22.56c17.68,46,6.81,80-6.81,107.89-12,24.62-34.56,42.72-61.45,47.91-23.06,4.45-48.37-.35-66.48-24.27a78.88,78.88,0,0,1-12.66-25.8c-14.75-51,4.14-88.76,11-101.41,6.18-11.39,37.26-69.61,103.42-42.24,55.71,23.05,100.66-23.31,100.66-23.31" transform="translate(311.08 476.02)" style="fill:none;stroke:url(#helloGrad);stroke-linecap:round;stroke-miterlimit:10;stroke-width:35px;filter:url(#helloLiquid)"/>
+          <defs>
+            <filter id="helloLiquid" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="4" result="turb"/>
+              <feDisplacementMap in="SourceGraphic" in2="turb" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <linearGradient id="helloGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="55%" stop-color="#dcecff"/>
+              <stop offset="100%" stop-color="#b6dbff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="g-sub">Augusto Segura Portfolio</span>
+    </div>
+  </div></div>
+  <div class="scroll-cue" id="scrollCue"><span>scroll</span><i></i></div>
+</section>
+
+<section class="phase" id="about">
+  <div class="wrap"><div class="about-grid">
+    <div class="glass reveal">
+    <div class="eyebrow" style="color:var(--cyan)">About</div>
+    <h2>Hello, I’m Augusto</h2>
+    <p class="lead">
+      I’m <strong>Augusto Segura</strong>, a Computer Science student at
+      <strong>Rutgers University–New Brunswick</strong> graduating in 2027. I’m a
+      full-stack developer focused on building polished web, mobile, software, and
+      AI-powered products using technologies such as
+      <strong>Flutter, Dart, JavaScript, HTML, and CSS</strong>.
+    </p>
+    <p class="lead">
+      I helped build <strong>ROOT</strong>, the first-place winner of the
+      <strong>Fiserv × Rutgers Newark Hackathon</strong>, and I’m the founder of
+      <strong>CloudDrop</strong>. My other projects include
+      <strong>StudyWeapon</strong> and the <strong>2KD website</strong>. I also work
+      as a Computer Technician for Elizabeth Public Schools, where I configure,
+      maintain, and troubleshoot devices supporting more than
+      <strong>2,000 students</strong>. I enjoy combining engineering, design, and
+      problem-solving to create technology that is useful, intuitive, and reliable.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><div class="num a">1st</div><div class="cap">Fiserv × Rutgers Hackathon</div></div>
+      <div class="stat"><div class="num c">'27</div><div class="cap">B.S. Computer Science</div></div>
+      <div class="stat"><div class="num v">3</div><div class="cap">Languages · EN · ES · PT</div></div>
+      <button class="btn cert-btn" id="certBtn">
+      <span>🏆</span> View My Certifications <span>🏆</span>
+    </div>
+    </div>
+    <!-- 3D depth-map portrait (tilts with your mouse) -->
+    <div class="depth-wrap">
+      <canvas id="depthCanvas"></canvas>
+    </div>
+  </div></div>
+</section>
+
+<section class="phase" id="projects">
+  <div class="wrap"><div class="proj-stage">
+    <div class="orbit-ring" id="orbitRing"></div>
+    <div class="glass reveal">
+    <div class="eyebrow" style="color:var(--pink)">Projects</div>
+    <h2 style="margin-bottom:26px">Things I've shipped.</h2>
+    <div class="tabs" id="ptabs">
+      <div class="tab on r" data-p="p0"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD Hood Cleaning</div>
+      <div class="tab b" data-p="p1"><span class="ico ico-img"><img src="./img/sw-logo.png" alt=""></span> Study Weapon</div>
+      <div class="tab g" data-p="p3"><span class="ico ico-img"><img src="./img/root-logo.jpg" alt=""></span> Root</div>
+      <div class="tab v" data-p="p2"><span class="ico ico-img"><img src="./img/clouddrop-logo.png" alt=""></span> CloudDrop</div>
+    </div>
+
+    <div class="panel show" id="p0"><div class="pcard">
+      <div class="logo logo-img"><img src="./img/2kd-logo.png" alt=""></div>
+      <div>
+        <h3>2KD Kitchen Hood Cleaning</h3>
+        <div class="role">Web Developer &amp; Digital Operations · Client work</div>
+        <p>Designed and built the company's website end-to-end with 100% uptime. Integrated scheduling and
+          customer-inquiry flows, handle 20+ client messages a week, and grew the brand's presence and engagement across platforms.</p>
+        <div class="stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>UI/UX</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://2kdhoodcleaning.com/" target="_blank" rel="noopener">Visit live site ↗</a>
+          <button class="btn more" data-proj="0">More details</button>
+        </div>
+      </div>
+    </div></div>
+
+    <div class="panel" id="p1"><div class="pcard">
+      <div class="logo logo-img"><img src="./img/sw-logo.png" alt=""></div>
+      <div>
+        <h3>Study Weapon</h3>
+        <div class="role">Web App · Developer</div>
+        <p>A study-focused web app built to help students learn faster and stay organized. Deployed on Vercel
+          with a clean, responsive interface designed for focus.</p>
+        <div class="stack"><span>Web</span><span>JavaScript</span><span>Vercel</span><span>UI/UX</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://studyweapon.vercel.app/" target="_blank" rel="noopener">Visit live site ↗</a>
+          <button class="btn more" data-proj="1">More details</button>
+        </div>
+      </div>
+    </div></div>
+
+    <div class="panel" id="p2"><div class="pcard">
+      <div class="logo logo-img"><img src="./img/clouddrop-logo.png" alt=""></div>
+      <div>
+        <h3>CloudDrop <span class="role" style="border:1px solid var(--line);padding:3px 9px;border-radius:999px">Personal project</span></h3>
+        <div class="role">Founder &amp; Lead Developer</div>
+        <p>Architected and shipped a full-stack product from the ground up — owning backend services and data flow
+          through to a clean, user-centered interface. Engineered the end-to-end experience as both software engineer and designer.</p>
+        <div class="stack"><span>Full-Stack</span><span>UI/UX</span><span>Product</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://github.com/gusbusx/CloudDrop" target="_blank" rel="noopener">Visit The Code ↗</a>
+          <button class="btn more" data-proj="2">More details</button>
+        </div>
+      </div>
+    </div></div>
+
+    <div class="panel" id="p3"><div class="pcard">
+      <div class="logo logo-img"><img src="./img/root-logo.jpg" alt=""></div>
+      <div>
+        <h3>Root <span class="role" style="border:1px solid var(--line);padding:3px 9px;border-radius:999px">1st Place · Hackathon</span></h3>
+        <div class="role">Mobile Developer · Fiserv × Rutgers Newark Hackathon</div>
+        <p>A location-aware digital wellness platform built with a 3-person team that took 1st place. Analyzes dwell time
+          and movement behavior to generate personalized recommendations, built on scalable routing and reusable service layers.</p>
+        <div class="stack"><span>Flutter</span><span>Dart</span><span>Android</span><span>iOS</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://github.com/gusbusx/root" target="_blank" rel="noopener">Visit The Code ↗</a>
+          <button class="btn more" data-proj="3">More details</button>
+        </div>
+      </div>
+    </div></div>
+  </div></div></div>
+</section>
+
+<!-- PROJECT DETAIL OVERLAY -->
+<div id="projDetail" class="proj-detail">
+  <div class="d-glass-card liquid-glass pd-card">
+    <div class="d-glass-card-morph"></div>
+    <div class="d-glass-card-corner"></div>
+    <div class="d-glass-card-border"></div>
+    <div class="d-glass-card-item pd-inner">
+      <button class="pd-close" id="pdClose" aria-label="Close">✕</button>
+      <div class="pd-scroll">
+        <div class="pd-text">
+          <div class="pd-eyebrow" id="pdEyebrow">Project</div>
+          <h2 class="pd-title" id="pdTitle">Title</h2>
+          <div class="pd-role" id="pdRole">Role</div>
+          <p class="pd-desc" id="pdDesc">Description…</p>
+          <div class="pd-links" id="pdLinks"></div>
+        </div>
+        <div class="pd-gallery" id="pdGallery"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX: click a project screenshot to enlarge it -->
+<div id="lightbox" class="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+
+<section class="phase" id="work">
+  <div class="wrap"><div class="glass reveal">
+    <div class="eyebrow" style="color:var(--amber)">Experience</div>
+    <h2 style="margin-bottom:26px">Where I've worked.</h2>
+    <div class="tabs" id="wtabs">
+      <div class="tab on a" data-p="w0"><span class="ico" style="background:var(--amber)">★</span> Hackathon</div>
+      <div class="tab b" data-p="w1"><span class="ico ico-img"><img src="./img/eps-logo.jpg" alt=""></span> EPS</div>
+      <div class="tab c" data-p="w2"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD</div>
+      <div class="tab v" data-p="w3"><span class="ico ico-img"><img src="./img/marler-logo.png" alt=""></span> Marler</div>
+      <div class="tab b" data-p="w4"><span class="ico ico-img"><img src="./img/amazon-logo.jpg" alt=""></span> Amazon</div>
+      <div class="tab p" data-p="w5"><span class="ico ico-img"><img src="./img/jerseymikes-logo.jpeg" alt=""></span> Jersey Mike's</div>
+    </div>
+    <div class="panel show" id="w0"><div class="witem"><div class="date">Apr 2026 <div class="wlogo"><img src="./img/root-logo.jpg" alt=""></div> <button class="btn more wbtn" data-proj="3">More details</button> </div><div><h4>Fiserv × Rutgers Newark Hackathon</h4><div class="r" style="color:var(--amber)">Winner — Mobile Developer</div><p>-Worked with a 3-person team to win 1st place by creating a location-aware wellness platform that analyzed dwell time and movement behavior to generate personalized recommendations. 
+<br><br/>-Architected the application using scalable routing and reusable service layers to accelerate feature integration during the competition. 
+<br><br/>-Delivered a fully functional Android/iOS MVP and presented the system design and product vision to Fiserv industry judges.</p></div></div></div>
+
+    <div class="panel" id="w1"><div class="witem"><div class="date">Jun 2026 - Present<div class="wlogo"><img src="./img/eps-logo.jpg" alt=""></div></div><div><h4>Elizabeth Board of Education</h4><div class="r" style="color:var(--blue)">Computer Technician</div><p>-Configured and deployed iPads and laptops for 2,000+ students across Elizabeth Public Schools, supporting large scale device readiness, student access, and classroom technology operations.
+<br><br/>-Managed student device profiles, applications, network settings, and security configurations to help maintain 100% compliance with district technology standards and improve device usability for daily instruction. 
+<br><br/>-Diagnosed and repaired technology issues including chargers, laptops, iPads, and accessories, helping reduce downtime and keep student devices operational for academic use.</p></div></div></div>
+
+    <div class="panel" id="w2"><div class="witem"><div class="date">Feb 2026 — Present <div class="wlogo"><img src="./img/2kd-logo.png" alt=""></div> <button class="btn more wbtn" data-proj="0">More details</button> </div><div><h4>2KD Kitchen Hood Cleaning LLC</h4><div class="r" style="color:var(--cyan)">Web Developer &amp; Digital Operations</div><p>-Designed and developed company website, improving usability and maintaining 100% uptime
+<br><br/>-Handled customer inquiries and scheduling, responding to 20+ client messages per week 
+<br><br/>-Supported marketing efforts by maintaining online presence and increasing engagement across platforms.</p></div></div></div>
+
+    <div class="panel" id="w3"><div class="witem"><div class="date">Jun 2023 — Present<div class="wlogo"><img src="./img/marler-logo.png" alt=""></div></div><div><h4>Marler Enterprises LLC</h4><div class="r" style="color:var(--violet)">Administrative Coordinator</div><p>-Entrusted with access to confidential banking information and logins for all company operations
+<br><br/>-Monitored and organized all billing data and information through Excel and records management to best assist company accountant in creating company budget
+<br><br/>-Coordinated travel arrangements and ensured that all tickets/itineraries/ documentation were well prepared and easily accessible for executives.</p></div></div></div>
+
+    <div class="panel" id="w4"><div class="witem"><div class="date">June 2024 - August 2024<div class="wlogo"><img src="./img/amazon-logo.jpg" alt=""></div></div><div><h4>Amazon Sortation Center</h4><div class="r" style="color:var(--blue)">Warehouse Associate</div><p>-Daily processed 32,000 orders with 99.998% sortation accuracy; top 1% in role.
+<br><br/>-Worked with team members to ensure work was accomplished in a timely manner, and in accordance with posted Amazon safety and Warehouse Safety/OSHA rules and guidelines.
+<br><br/>-Prepared customer orders in a fast-paced environment, ranging from small single orders to complex multiple-item orders</p></div></div></div>
+
+    <div class="panel" id="w5"><div class="witem"><div class="date">Jun 2023 - Jul 2023<div class="wlogo"><img src="./img/jerseymikes-logo.jpeg" alt=""></div></div><div><h4>Jersey Mike's</h4><div class="r" style="color:var(--pink)">Crew Member</div><p>-Ensured a clean and orderly atmosphere by consistently wearing the correct corporate attire.
+<br><br/>-Welcomed customers, took orders, and delivered meals and drinks with a consistently friendly and supportive attitude.
+<br><br/>-Managed customer inquiries in a professional and composed manner, resolving issues in alignment with Jersey Mike's policy.</p></div></div></div>
+  </div></div>
+</section>
+
+<section class="phase" id="contact">
+  <div class="wrap"><div class="glass reveal">
+    <div class="eyebrow" style="color:var(--cyan)">Get in touch</div>
+    <h2 style="margin-bottom:26px">Contact</h2>
+    <div class="grid">
+      <div>
+        <div class="field"><label>Name</label><input id="cName" type="text" placeholder="Your name"></div>
+        <div class="field"><label>Subject</label><input id="cSubj" type="text" placeholder="Subject"></div>
+        <div class="field"><label>Email</label><input id="cEmail" type="email" placeholder="Your email"></div>
+        <div class="field"><label>Message</label><textarea id="cMsg" placeholder="Your message"></textarea></div>
+        <button class="sendbtn" id="sendBtn">send</button>
+      </div>
+      <div class="social">
+        <a href="https://www.linkedin.com/in/gusbuses/" target="_blank" rel="noopener"><span class="si si-img"><img src="./img/linkedin.png" alt=""></span><span>LinkedIn<small>in/gusbuses</small></span></a>
+        <a href="mailto:augustoesegura@gmail.com"><span class="si si-img"><img src="./img/gmail.jpg" alt=""></span><span>Email<small>augustoesegura@gmail.com</small></span></a>
+        <a href="https://github.com/gusbusx" target="_blank" rel="noopener"><span class="si si-img"><img src="./img/github.png" alt=""></span><span>GitHub<small>github.com/gusbusx</small></span></a>
+      </div>
+    </div>
+  </div></div>
+</section>
+</div>
+<footer>Made with <span class="h">❤</span> by Augusto Segura</footer>
+
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three.module.js",
+  "three/addons/loaders/GLTFLoader.js": "./vendor/GLTFLoader.js",
+  "three/addons/loaders/DRACOLoader.js": "./vendor/DRACOLoader.js",
+  "../utils/BufferGeometryUtils.js": "./vendor/BufferGeometryUtils.js"
+}}
+</script>
+
+<script>
+(function(){
+  // ---- orbiting language-logo ring around the projects box ----
+  const LOGOS=[{"label":"Python","color":"#3776AB","path":"M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"},{"label":"JavaScript","color":"#F7DF1E","path":"M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"},{"label":"C","color":"#A8B9CC","path":"M16.5921 9.1962s-.354-3.298-3.627-3.39c-3.2741-.09-4.9552 2.474-4.9552 6.14 0 3.6651 1.858 6.5972 5.0451 6.5972 3.184 0 3.5381-3.665 3.5381-3.665l6.1041.365s.36 3.31-2.196 5.836c-2.552 2.5241-5.6901 2.9371-7.8762 2.9201-2.19-.017-5.2261.034-8.1602-2.97-2.938-3.0101-3.436-5.9302-3.436-8.8002 0-2.8701.556-6.6702 4.047-9.5502C7.444.72 9.849 0 12.254 0c10.0422 0 10.7172 9.2602 10.7172 9.2602z"},{"label":"C#","color":"#512BD4","path":"M24 8.77h-2.468v7.565h-1.425V8.77h-2.462V7.53H24zm-6.852 7.565h-4.821V7.53h4.63v1.24h-3.205v2.494h2.953v1.234h-2.953v2.604h3.396zm-6.708 0H8.882L4.78 9.863a2.896 2.896 0 0 1-.258-.51h-.036c.032.189.048.592.048 1.21v5.772H3.157V7.53h1.659l3.965 6.32c.167.261.275.442.323.54h.024c-.04-.233-.06-.629-.06-1.185V7.529h1.372zm-8.703-.693a.868.829 0 0 1-.869.829.868.829 0 0 1-.868-.83.868.829 0 0 1 .868-.828.868.829 0 0 1 .869.829Z"},{"label":"Dart","color":"#0175C2","path":"M4.105 4.105S9.158 1.58 11.684.316a3.079 3.079 0 0 1 1.481-.315c.766.047 1.677.788 1.677.788L24 9.948v9.789h-4.263V24H9.789l-9-9C.303 14.5 0 13.795 0 13.105c0-.319.18-.818.316-1.105l3.789-7.895zm.679.679v11.787c.002.543.021 1.024.498 1.508L10.204 23h8.533v-4.263L4.784 4.784zm12.055-.678c-.899-.896-1.809-1.78-2.74-2.643-.302-.267-.567-.468-1.07-.462-.37.014-.87.195-.87.195L6.341 4.105l10.498.001z"},{"label":"Flutter","color":"#02569B","path":"M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z"},{"label":"HTML5","color":"#E34F26","path":"M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"},{"label":"CSS","color":"#1572B6","path":"M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"},{"label":"Unity","color":"#FFFFFF","path":"m12.9288 4.2939 3.7997 2.1929c.1366.077.1415.2905 0 .3675l-4.515 2.6076a.4192.4192 0 0 1-.4246 0L7.274 6.8543c-.139-.0745-.1415-.293 0-.3675l3.7972-2.193V0L1.3758 5.5977V16.793l3.7177-2.1456v-4.3858c-.0025-.1565.1813-.2682.318-.1838l4.5148 2.6076a.4252.4252 0 0 1 .2136.3676v5.2127c.0025.1565-.1813.2682-.3179.1838l-3.7996-2.1929-3.7178 2.1457L12 24l9.6954-5.5977-3.7178-2.1457-3.7996 2.1929c-.1341.082-.3229-.0248-.3179-.1838V13.053c0-.1565.087-.2956.2136-.3676l4.5149-2.6076c.134-.082.3228.0224.3179.1838v4.3858l3.7177 2.1456V5.5977L12.9288 0Z"},{"label":"Git","color":"#F05032","path":"M13.09 23.549a1.54 1.54 0 0 1-2.18 0L.451 13.089a1.54 1.54 0 0 1 0-2.179l7.191-7.19 2.733 2.733a1.85 1.85 0 0 0 .964 2.326v6.66a1.849 1.849 0 1 0 1.54 0V8.957l2.508 2.508a1.85 1.85 0 1 0 1.09-1.09l-2.634-2.634a1.85 1.85 0 0 0-2.378-2.377L8.73 2.63 10.91.451a1.54 1.54 0 0 1 2.179 0l10.459 10.46a1.54 1.54 0 0 1 0 2.179z"},{"label":"React","color":"#61DAFB","path":"M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"},{"label":"Node.js","color":"#5FA04E","path":"M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"}];
+  (function buildRing(){
+    const ring=document.getElementById('orbitRing'); if(!ring) return;
+    const stage=ring.closest('.proj-stage');
+    const orbs=LOGOS.map(l=>{
+      const el=document.createElement('div'); el.className='orb';
+      el.innerHTML=`<svg viewBox="0 0 24 24" fill="${l.color}"><path d="${l.path}"/></svg><span>${l.label}</span>`;
+      ring.appendChild(el); return el;
+    });
+    let t=0;
+    function place(){
+      const box=stage.querySelector('.glass').getBoundingClientRect();
+      const sr=stage.getBoundingClientRect();
+      // radius = a bit outside the box corners
+      const rx=box.width/2 + 70, ry=box.height/2 + 50;
+      const n=orbs.length;
+      orbs.forEach((el,i)=>{
+        const a=t + (i/n)*Math.PI*2;
+        const x=Math.cos(a)*rx, y=Math.sin(a)*ry;
+        el.style.left=(x)+'px'; el.style.top=(y)+'px';
+        // fade orbs that pass behind the box (top area) slightly
+        el.style.opacity = 0.55+0.45*((Math.sin(a)+1)/2);
+      });
+      t+=0.0025;
+      requestAnimationFrame(place);
+    }
+    place();
+  })();
+  function wireTabs(id){const cont=document.getElementById(id);const glass=cont.closest('.glass');
+    cont.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+      cont.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));tab.classList.add('on');
+      glass.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+      glass.querySelector('#'+tab.dataset.p).classList.add('show');
+    }));}
+  wireTabs('ptabs');wireTabs('wtabs');
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.2});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const links=[...document.querySelectorAll('nav a')];
+  const navIo=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id));}})},{threshold:.5});
+  document.querySelectorAll('.phase').forEach(s=>navIo.observe(s));
+  document.getElementById('sendBtn').addEventListener('click',async()=>{
+    const btn=document.getElementById('sendBtn');
+    const n=document.getElementById('cName').value.trim(),
+          s=document.getElementById('cSubj').value.trim(),
+          em=document.getElementById('cEmail').value.trim(),
+          m=document.getElementById('cMsg').value.trim();
+    if(!n||!em||!m){ btn.textContent='fill in name, email & message'; setTimeout(()=>btn.textContent='send',1800); return; }
+    btn.textContent='sending…'; btn.disabled=true;
+    try{
+      const res=await fetch('https://formspree.io/f/mrewdlwe',{
+        method:'POST',
+        headers:{'Accept':'application/json'},
+        body:JSON.stringify({name:n, email:em, _subject:s||'New message from portfolio', message:m})
+      });
+      if(res.ok){
+        btn.textContent='sent ✓ thank you!';
+        ['cName','cSubj','cEmail','cMsg'].forEach(id=>document.getElementById(id).value='');
+      }else{ btn.textContent='something went wrong — try again'; }
+    }catch(e){ btn.textContent='network error — try again'; }
+    btn.disabled=false;
+    setTimeout(()=>btn.textContent='send',3000);
+  });
+
+  // "hello" draw-on: replay the writing animation periodically (like the boot screen)
+  const helloDiv=document.querySelector('.hello__div');
+  if(helloDiv){
+    setInterval(()=>{
+      helloDiv.style.display='none';
+      // force reflow so the CSS animation restarts
+      void helloDiv.offsetWidth;
+      helloDiv.style.display='flex';
+    }, 20000);
+  }
+  // hide scroll cue after user scrolls
+  addEventListener('scroll',()=>{const c=document.getElementById('scrollCue');if(c)c.style.opacity=scrollY>60?'0':'';},{passive:true});
+
+  /* ===== PROJECT DETAIL VIEWS ===== */
+  // Each project: its own camera pose (set these with the T tuner, section PROJECTS),
+  // plus expanded content + image slots. Edit pos/look to place each project's camera.
+  const PROJECT_DETAILS = [
+    { // 0 — 2KD
+      eyebrow:'Client Work · Web',
+      title:'2KD Kitchen Hood Cleaning',
+      role:'Web Developer & Digital Operations',
+      desc:`2KD Kitchen Hood Cleaning is a family-owned commercial kitchen exhaust cleaning company serving Northern New Jersey. I designed, architected, and shipped their entire web presence solo — from blank file to live production site — and I continue to own it end to end. It's a hand-written, dependency-free front end (no frameworks, no build step): ~700 lines of semantic HTML, ~1,800 lines of custom CSS, and vanilla JavaScript, deployed behind Cloudflare with 100% uptime.
+      
+      INTERACTIVE NEW JERSEY SERVICE MAP — The centerpiece. I built a fully interactive SVG map of all 21 New Jersey counties as a data-driven component. Each county path is a clickable region wired to a JavaScript data model containing the county's description, representative cities with their municipality types (City / Township / Borough / Town / Village), and coverage notes. Clicking a county drives active-state management across all 21 paths, swaps a placeholder panel for a detail panel, and dynamically renders a city list via template literals — with Union County flagged as the primary service area. It turns "where do you work?" into something a visitor can explore, and it's genuinely the kind of stateful, data-bound UI you'd normally reach for a framework to build.
+      
+      ANIMATED COMPLIANCE PANEL SYSTEM — A dual-panel slider that toggles between the company's NFPA 96 and Mobile Fire Systems certifications. I built a full slide-in/slide-out state machine: outgoing panels animate off-axis, chained setTimeouts sequence the hand-off, the section's background theme crossfades between NFPA and MFS branding, and incoming panels slide in from the opposite side — all with CSS classes swapped in JS so the animation stays GPU-composited and smooth.
+      
+      CANVAS PARTICLE FIREWORKS ENGINE — When a quote request submits successfully, the site celebrates with a real particle system I wrote from scratch on HTML5 Canvas. It spawns up to 12 timed bursts of 60–100 particles each, with per-particle velocity vectors, gravity acceleration, air drag, alpha decay, randomized size and color from a 7-color palette, and a 4-frame position trail rendered as a tapering comet tail — all driven by a requestAnimationFrame loop that self-terminates when the last particle dies. It's a small touch, but it's a full physics/render loop, not a GIF.
+      
+      AJAX FORM PIPELINE — Two independent async form handlers (a main quote request and a footer inquiry) built on fetch + async/await with full lifecycle handling: preventDefault, in-flight button state ("Sending…"), disabled-state locking to prevent double-submits, FormData/JSON serialization, response.ok branching, try/catch network error recovery, and graceful failure messaging that surfaces the company's phone number as a fallback. Success swaps the form for a confirmation state and triggers the fireworks.
+      
+      CUSTOM SERVICE SELECTOR — A bespoke checkbox grid replacing native inputs: styled boxes with icons, labels, and animated check states so users can select multiple services in a single request.
+      
+      MOTION & ANIMATION SYSTEM — 19 hand-authored CSS keyframe animations driving the whole experience: card rise and glow effects, fade-up scroll reveals, a word-flip cycler in the hero, pulsing scroll and arrow prompts, county fade-ins, staggered nav item entrances, pop-ins, a wave effect, and the NFPA/MFS glow states. Backed by 200+ transition and transform rules for hover states and micro-interactions throughout.
+      
+      VIDEO-DRIVEN HERO & QUOTE SECTIONS — Autoplaying background video in the hero and behind the quote form, with layered overlays and accent treatments so the copy stays legible over motion.
+      
+      RESPONSIVE ARCHITECTURE — 7 breakpoints (960 / 900 / 860 / 760 / 700 / 560 / 420px) covering the full device range, plus a custom mobile navigation with a hamburger toggle that animates to an ✕, locks/unlocks the nav, and auto-closes on link click.
+      
+      TRUST & CONVERSION LAYER — Certification badges (NFPA 96, Mobile Fire Systems), a stats bar (3+ years, 200+ kitchens cleaned, 24/7 availability), an about section, and quote CTAs routed straight to the team.
+      
+      OPERATIONS — Beyond the build, I run their digital operations: fielding 20+ client inquiries a week, maintaining the site, and growing their reach across Northern New Jersey.`,
+      images:['./img/2kdpics/2kd1.png','./img/2kdpics/2kd2.png','./img/2kdpics/2kd3.png','./img/2kdpics/2kd4.png','./img/2kdpics/2kd5.png','./img/2kdpics/2kd6.png','./img/2kdpics/2kd7.png'],
+      links:[{label:'Visit live site ↗', href:'https://2kdhoodcleaning.com/'}],
+      cam:{ pos:[152, -3, -7], look:[0, 0, 195] }
+    },
+    { // 1 — Study Weapon
+      eyebrow:'Web App · Free Student Tools',
+      title:'Study Weapon',
+      role:'Developer',
+      desc:`Study Weapon is a free, no-signup platform of 15+ study tools I designed and built for students — every tool runs instantly in the browser with no paywalls, no limits, and no account required. It's a React application built on Next.js with the App Router, styled with Tailwind, code-split so each tool lazy-loads as its own route chunk, and deployed on Vercel's edge network. The architecture is deliberately modular: every tool is an isolated, independently-routable module under /tools/*, so the platform scales by adding tools rather than rewriting the shell.
+      
+      A core engineering constraint drove the whole design — everything that can run client-side does. The converters, calculators, and file tools process entirely in the browser, so student files are never uploaded to a server. That's both a privacy guarantee ("100% browser-safe, nothing uploaded, no data stored or sold") and an infrastructure decision that keeps the product free to run at scale.
+
+      GPA & GRADE ENGINE — The most technically involved cluster, and the product's #1 tool. The GPA What-If Predictor models credit-weighted GPA math: users set their current GPA and completed credits, then dynamically add upcoming classes with per-class credit values and expected letter grades. It recomputes the projected GPA live as sliders move, and surfaces the delta against current standing (e.g. "↓ 0.02 from current") along with a running credit ledger. The Canvas Grade Calculator reimplements Canvas's weighted assignment-group model to compute a true course grade by category — the same math the LMS runs, but transparent and checkable. The Grade Curve Calculator applies a normal-distribution curve to a raw score using class statistics, showing students where they actually fall in the distribution.
+
+      FLASHCARD MAKER — Parses pasted raw notes and generates a downloadable Anki-compatible CSV, so the output plugs straight into the spaced-repetition tool students already use rather than locking them into my app.
+
+      AI WRITING SUITE — The AI Humanizer (the most-used tool on the site) rewrites AI-generated text to read naturally. A companion AI Detectors hub checks writing against the major detection engines (GPTZero, Copyleaks and others) so students can verify before submitting. Plus a live Word Counter reporting words, characters, sentences, and estimated read time as you type.
+
+      CONVERTERS & FILE TOOLKIT — A Photo Converter (PNG/JPG/WEBP with crop, resize, flip, and compression), a full PDF toolkit (merge, split, rotate, password-protect, edit), a File Converter handling CSV/JSON/XML/Excel transformations, and an AI Background Remover — all browser-based.
+
+      CITATION BUILDER — Generates correctly formatted APA, MLA, and Chicago citations in one click, handling the format-specific field ordering and punctuation rules students routinely get wrong.
+
+      POMODORO TIMER — Focus timer with persistent session tracking, so study blocks are logged rather than just counted down.
+
+      PRODUCT & GROWTH ENGINEERING — The landing page is built for conversion: intent-based category navigation (AI Tools / Study / Converters / Writing), tool cards with social-proof badges ("MOST POPULAR", "#1 TOOL"), live trust metrics (15+ free tools · 0 signups · $0 forever · 100% browser-safe), a one-click copy-and-share widget for organic distribution, and SEO-targeted landing copy. The product monetizes through ad placement instead of gating features — a deliberate call to keep every tool free for the students who need them most. Includes full privacy policy and terms, with a stated no-data-retention policy.`,
+      images:['./img/studyweaponpics/sw1.png','./img/studyweaponpics/sw2.png','./img/studyweaponpics/sw3.png','./img/studyweaponpics/sw4.png'],
+      links:[{label:'Visit live site ↗', href:'https://studyweapon.vercel.app/'}],
+      cam:{ pos:[152, -3, 0], look:[0, 0, -400] }
+    },
+    { // 2 — CloudDrop
+      eyebrow:'Personal Project',
+      title:'CloudDrop',
+      role:'Founder & Lead Developer',
+      desc:`CloudDrop is a production-architected Dropbox-style cloud storage platform I designed and built end to end — a full-stack system with a NestJS API, React + TypeScript frontend, PostgreSQL, Redis, and S3 object storage, fully containerized with Docker Compose. It's the project where I went deepest on backend systems design: content-addressed deduplication, resumable uploads, hierarchical permissions, and indexed search are all implemented from first principles rather than pulled off a shelf.
+
+      CONTENT-ADDRESSED DEDUPLICATION — Every uploaded file is hashed with SHA-256 and stored as a physical "blob" keyed by that hash. If two users upload byte-identical content, S3 stores exactly one object; each user's file row is just metadata pointing at the shared blob, tracked with a reference count. Deletes decrement the refcount, and the underlying S3 object is only purged when the last reference disappears. It's the same content-addressable storage model real cloud providers use, and it means storage cost scales with unique content rather than upload volume.
+
+      RESUMABLE CHUNKED UPLOADS — Files over 5 MB are split client-side into chunks and uploaded individually against a server-side upload session that persists which chunks have landed. If a connection drops mid-transfer, the client queries the session for its received-chunk set and resumes only the missing pieces instead of restarting. The server reassembles chunks into the final object on completion. Full lifecycle: init → per-chunk upload → status/resume → reassemble and finalize.
+
+      HIERARCHICAL PERMISSION SYSTEM — Files and folders can be shared by email at three levels (owner / editor / viewer) with a ranked privilege model. The tricky part is inheritance: I built a permission resolver that walks the folder ancestry to compute a user's *effective* permission on any item — direct ownership first, then an explicit share, then falling back to whatever they inherit from any shared ancestor folder up the tree. That means sharing a folder correctly grants access to everything nested inside it, at any depth, without duplicating grant rows.
+
+      INDEXED SEARCH — Name search across files and folders is backed by PostgreSQL trigram (pg_trgm) GIN indexes, so fuzzy substring matching stays fast as the dataset grows instead of degrading into a sequential scan.
+
+      AUTH & API — JWT authentication with Passport strategy and route guards, bcrypt password hashing, and a fully guarded REST API (every route outside /auth requires a bearer token). Clean modular NestJS architecture: separate auth, users, files, folders, sharing, search, storage, and redis modules, with DTO validation and custom decorators.
+
+      DATA LAYER — TypeORM over PostgreSQL 16 with versioned migrations that run automatically on boot. Schema models the whole domain: users, file_blobs (deduplicated physical objects), files (logical per-user metadata), self-referencing folders (the tree), shares (the permission grants), and upload_sessions (resumable state).
+
+      INFRASTRUCTURE — Docker Compose orchestrating the API, frontend, Postgres, and Redis. The backend entrypoint waits for the database to be healthy, runs pending migrations, then boots. The frontend builds to static assets served by nginx, which reverse-proxies /api to the backend. S3 storage is endpoint-configurable, so it runs against real AWS S3 in production or MinIO/LocalStack locally without a code change.
+
+      FRONTEND — React 18 + TypeScript on Vite: an authenticated file-explorer dashboard with folder navigation, upload (including the chunked-resume client), presigned-URL downloads, rename/move/delete, a share modal for managing permissions, and search — with auth state managed through React Context.
+
+      Downloads are served via presigned S3 URLs so file bytes never round-trip through the API server — the client pulls directly from object storage.`,
+      images:['./img/temp7.jpg','./img/temp8.jpg'],
+      links:[{label:'Visit The Code ↗', href:'https://github.com/gusbusx/CloudDrop'}],
+      cam:{ pos:[119, -3, 6], look:[0, -4, -285] }
+    },
+    { // 3 — Root (Hackathon) 
+      eyebrow:'Hackathon · 1st Place',
+      title:'Root',
+      role:'Mobile Developer — Fiserv × Rutgers Newark Hackathon',
+      desc:`Root is a location-aware digital wellness and burnout-prevention platform my 3-person team built at the Fiserv × Rutgers Newark Hackathon — where it took 1st place. It's a cross-platform Flutter application (Android, iOS, and web from a single codebase) built around a simple insight: burnout isn't caused by one bad day, it's a trend you can measure — and where you *are* changes what you need.
+
+      MULTI-FACTOR BURNOUT SCORING ENGINE — The core of the product. I built a weighted health model that computes a continuous burnout score from a rolling 7-day window of behavioral and physiological signals: sleep deficit against a 7.5h target, time logged at work locations, resting heart rate delta above baseline, screen time, and hydration shortfall against a personalized goal. Each factor contributes a clamped, independently-weighted term so no single signal can dominate the score, and meditation minutes act as a *negative* term that actively pulls the score back down. Mood check-ins are layered on top — repeated "Stressed" or "Anxious" entries push the score up. The result is a defensible, explainable number rather than a black box, and it moves with real behavior over time.
+
+      LOCATION-AWARE MODE SYSTEM — Root classifies where you are (work / school / park / home / gym / other) via GPS with a manual check-in fallback, and the entire app re-themes and re-prioritizes around it. Dwell time at each location type feeds directly back into the burnout model — time accumulated at work locations is one of the heaviest weighted inputs. The app pairs location context with movement behavior to generate break suggestions that actually fit the moment.
+
+      GAMIFIED BEHAVIOR LOOP — An energy multiplier that fills as healthy habits are completed, a points economy, streak tracking (sleep streaks, hydration), and a growing garden that visualizes cumulative progress. Rather than just showing users a bad score, the system gives them a compounding reason to move it.
+
+      FEATURE SURFACE — Multi-step onboarding flow (profile, occupation, activity level, health baseline) that personalizes targets; a home dashboard composed of modular widgets (burnout score card, daily check-in, water tracker, stats row, analytics, break suggestions, energy bar, location status); a meditation module; an analytics view with charted trends via fl_chart; a "Your Story" narrative view; and profile settings.
+
+      ARCHITECTURE — I architected the app with a clean feature-first structure (presentation / services / theme / core / widgets) using reusable service layers and a shared widget library — a deliberate choice so the three of us could integrate features in parallel without collisions under hackathon time pressure. Responsive layout via Sizer so it scales cleanly across phone, tablet, and web. Local persistence with SharedPreferences, network layer on Dio with connectivity awareness, cached network images, custom theming with light/dark support, and a full set of shared UI primitives (loading skeletons, empty states, error boundaries, status badges).
+
+      OUTCOME — Delivered a fully functional Android/iOS MVP within the hackathon window and presented the system design and product vision to Fiserv industry judges, taking 1st place.`,
+      images:['./img/temp9.jpg','./img/temp10.jpg'],
+      links:[{label:'Visit The Code ↗', href:`https://github.com/gusbusx/root`}],
+      cam:{ pos:[72, -3, 0], look:[0, 0, 44] }
+    },
+  ];
+
+  const overlay=document.getElementById('projDetail');
+  function openDetail(i){
+    const d=PROJECT_DETAILS[i]; if(!d) return;
+    document.getElementById('pdEyebrow').textContent=d.eyebrow;
+    document.getElementById('pdTitle').textContent=d.title;
+    document.getElementById('pdRole').textContent=d.role;
+    document.getElementById('pdDesc').textContent=d.desc;
+    // gallery — images float left/right INSIDE the text, text wraps around them
+    const g=document.getElementById('pdGallery');
+    const imgs=(d.images||[]).filter(Boolean);
+    if(imgs.length){
+      g.style.display='';
+      g.innerHTML=imgs.map(src=>`<div class="shot"><img src="${src}" alt=""></div>`).join('');
+      window.__lbList = imgs;          // hand the list to the lightbox
+    }else{ g.style.display='none'; g.innerHTML=''; }
+    // links
+    const l=document.getElementById('pdLinks');
+    l.innerHTML=d.links.map(x=>`<a class="btn live" href="${x.href}" target="_blank" rel="noopener">${x.label}</a>`).join('');
+    // fly camera (app.js exposes flyToDetail)
+    if(window.flyToDetail && d.cam) window.flyToDetail(d.cam);
+    document.getElementById('projects').style.opacity='0';
+    document.getElementById('work').style.opacity='0';
+    document.body.style.overflow='hidden';
+    overlay.classList.add('open');
+  }
+  function closeDetail(){
+    overlay.classList.remove('open');
+    document.getElementById('projects').style.opacity='1';
+    document.getElementById('work').style.opacity='1';
+    document.body.style.overflow='';
+    if(window.exitDetail) window.exitDetail();
+  }
+  document.querySelectorAll('.btn.more').forEach(b=>{
+    b.addEventListener('click',()=>openDetail(+b.dataset.proj));
+  });
+  document.getElementById('pdClose').addEventListener('click',closeDetail);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeDetail(); });
+
+  /* ===== LIGHTBOX: click a screenshot to blow it up ===== */
+  const lb      = document.getElementById('lightbox');
+  const lbImg   = document.getElementById('lbImg');
+  const lbCount = document.getElementById('lbCount');
+  let lbIdx  = 0;
+
+  function openLightbox(i){
+    const lbList = window.__lbList || [];
+    if(!lbList.length) return;
+    lbIdx = (i + lbList.length) % lbList.length;   // wrap around
+    lbImg.src = lbList[lbIdx];
+    lbCount.textContent = `${lbIdx+1} / ${lbList.length}`;
+    lb.classList.add('open');
+  }
+  function closeLightbox(){ lb.classList.remove('open'); }
+
+  // clicking any thumbnail opens it big
+  document.getElementById('pdGallery').addEventListener('click', e=>{
+    const shot = e.target.closest('.shot');
+    if(!shot) return;
+    const shots = [...document.querySelectorAll('#pdGallery .shot')];
+    openLightbox(shots.indexOf(shot));
+  });
+
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', e=>{ e.stopPropagation(); openLightbox(lbIdx-1); });
+  document.getElementById('lbNext').addEventListener('click', e=>{ e.stopPropagation(); openLightbox(lbIdx+1); });
+  // click the dark area (not the image) to close
+  lb.addEventListener('click', e=>{ if(e.target===lb) closeLightbox(); });
+
+  // Esc: close the lightbox first if it's open, otherwise close the detail
+  addEventListener('keydown', e=>{
+    if(e.key==='Escape'){
+      if(lb.classList.contains('open')) closeLightbox();
+      else if(overlay.classList.contains('open')) closeDetail();
+    }
+    // arrow keys flip through images while the lightbox is open
+    if(lb.classList.contains('open')){
+      if(e.key==='ArrowLeft')  openLightbox(lbIdx-1);
+      if(e.key==='ArrowRight') openLightbox(lbIdx+1);
+    }
+  });
+})();
+</script>
+<script type="module" src="./app.js"></script>
+<script type="module" src="./depth3d.js"></script>
+</body>
+</html>
