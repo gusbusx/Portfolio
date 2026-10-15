@@ -353,7 +353,7 @@
       I helped build <strong>ROOT</strong>, the first-place winner of the
       <strong>Fiserv × Rutgers Newark Hackathon</strong>, and I’m the founder of
       <strong>CloudDrop</strong>. My other projects include
-      <strong>StudyWeapon</strong> and the <strong>2KD website</strong>. I also work
+      <strong>StudyWeapon</strong>, the <strong>2KD website</strong>, and the <strong>Marler Enterprises website</strong>. I also work
       as a Computer Technician for Elizabeth Public Schools, where I configure,
       maintain, and troubleshoot devices supporting more than
       <strong>2,000 students</strong>. I enjoy combining engineering, design, and
@@ -383,6 +383,7 @@
     <h2 style="margin-bottom:26px">Things I've shipped.</h2>
     <div class="tabs" id="ptabs">
       <div class="tab on r" data-p="p0"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD Hood Cleaning</div>
+      <div class="tab a" data-p="p4"><span class="ico ico-img"><img src="./img/marler-logo.png" alt=""></span> Marler Enterprises</div>
       <div class="tab b" data-p="p1"><span class="ico ico-img"><img src="./img/sw-logo.png" alt=""></span> Study Weapon</div>
       <div class="tab g" data-p="p3"><span class="ico ico-img"><img src="./img/root-logo.jpg" alt=""></span> Root</div>
       <div class="tab v" data-p="p2"><span class="ico ico-img"><img src="./img/clouddrop-logo.png" alt=""></span> CloudDrop</div>
@@ -447,6 +448,22 @@
         </div>
       </div>
     </div></div>
+
+    <div class="panel" id="p4"><div class="pcard">
+      <div class="logo logo-img"><img src="./img/marler-logo.png" alt=""></div>
+      <div>
+        <h3>Marler Enterprises LLC</h3>
+        <div class="role">Web Developer · Client work</div>
+        <p>Designed and built the full website for Marler Enterprises, a bookkeeping and administrative services firm in
+          Roselle, NJ. A hand-coded, scroll-driven site in the company's gold-and-green brand, with a working contact form,
+          live at marlerenterprises.com.</p>
+        <div class="stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Canvas</span><span>Cloudflare Pages</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://marlerenterprises.com/" target="_blank" rel="noopener">Visit live site ↗</a>
+          <button class="btn more" data-proj="4">More details</button>
+        </div>
+      </div>
+    </div></div>
   </div></div></div>
 </section>
 
@@ -505,7 +522,8 @@
 <br><br/>-Handled customer inquiries and scheduling, responding to 20+ client messages per week 
 <br><br/>-Supported marketing efforts by maintaining online presence and increasing engagement across platforms.</p></div></div></div>
 
-    <div class="panel" id="w3"><div class="witem"><div class="date">Jun 2023 — Present<div class="wlogo"><img src="./img/marler-logo.png" alt=""></div></div><div><h4>Marler Enterprises LLC</h4><div class="r" style="color:var(--violet)">Administrative Coordinator</div><p>-Entrusted with access to confidential banking information and logins for all company operations
+    <div class="panel" id="w3"><div class="witem"><div class="date">Jun 2023 — Present<div class="wlogo"><img src="./img/marler-logo.png" alt=""></div> <button class="btn more wbtn" data-proj="4">More details</button> </div><div><h4>Marler Enterprises LLC</h4><div class="r" style="color:var(--violet)">Administrative Coordinator + Web Developer</div><p>-Designed, built, and launched the company website (marlerenterprises.com) from scratch: hand-coded HTML, CSS and JavaScript with a working contact form, deployed on Cloudflare Pages with a custom domain
+<br><br/>-Entrusted with access to confidential banking information and logins for all company operations
 <br><br/>-Monitored and organized all billing data and information through Excel and records management to best assist company accountant in creating company budget
 <br><br/>-Coordinated travel arrangements and ensured that all tickets/itineraries/ documentation were well prepared and easily accessible for executives.</p></div></div></div>
 
@@ -735,6 +753,31 @@
       images:['./img/temp9.jpg','./img/temp10.jpg'],
       links:[{label:'Visit The Code ↗', href:`https://github.com/gusbusx/root`}],
       cam:{ pos:[72, -3, 0], look:[0, 0, 44] }
+    },
+    { // 4 — Marler Enterprises
+      eyebrow:'Client Work · Web',
+      title:'Marler Enterprises LLC',
+      role:'Web Developer',
+      desc:`Marler Enterprises LLC is an administrative services firm in Roselle, New Jersey: bookkeeping for small businesses and the real estate industry, plus notary, form preparation and back-office support. I designed and built their entire website from a blank file to a live production site at marlerenterprises.com. It's hand-written HTML, CSS and vanilla JavaScript in a single page, with no frameworks and no build step, deployed on Cloudflare Pages with a custom domain.
+
+      BRAND SYSTEM — The design is built around the company's gold "M over an open book" logo: gold gradients over a deep money-green, Cinzel for display type and Geist for body copy. The whole palette is driven by CSS custom properties, and the site supports both light and dark mode through prefers-color-scheme.
+
+      SCROLL-DRIVEN STORYTELLING — One requestAnimationFrame-throttled scroll handler (on a passive listener) drives every scene. In the hero, the headline scales and fades while three paper documents (a business form, a reconciled ledger and a notarized affidavit) fan out in 3D using translate3d, rotate and rotateX. A "From our CEO" statement reveals word by word as you scroll, and a progress bar tracks your position on the page.
+
+      HORIZONTAL SERVICES REEL — The six services live in a pinned horizontal track. Scrolling down slides the track sideways, with the section height computed from the track width so the scroll distance always matches. Each panel activates as it reaches center and has a pointer-tracked spotlight. On narrow screens or with reduced motion turned on, it falls back to a stacked layout watched by an IntersectionObserver.
+
+      LIVE UI MOCKUPS — Instead of stock photos, every service panel has a small working interface built in HTML and CSS: a balanced debit/credit ledger for bookkeeping, a rent roll with paid units and deposits for real estate, a notary seal, a business application form, and a back-office task board. Visitors see the work instead of reading about it.
+
+      CANVAS GROWTH CHART — A hand-drawn HTML5 Canvas chart in the "Built for growth" section: an endlessly climbing growth line drawn with bezier curves, a falling dashed "paperwork" line, event markers and a leading dot. It is DPR-aware for sharp rendering on retina screens, and an IntersectionObserver pauses the animation whenever it's off screen.
+
+      CREDENTIALS & TRUST — An animated reveal of the owner's Intuit and QuickBooks certifications (Bookkeeping Trained, QuickBooks Level 1, Level 2, Desktop and Payroll Certified), a company facts strip, and a link out to the firm's Google reviews.
+
+      CONTACT PIPELINE — The consultation form posts to the business inbox over AJAX with fetch and async/await. It validates name and email before sending, uses a hidden honeypot field to trap spam bots, locks the button while in flight, and on success shows a toast and a canvas confetti burst. The privacy policy opens in a native dialog element.
+
+      RESPONSIVE & ACCESSIBLE — Breakpoints from 1000px down to 420px, and every motion effect respects prefers-reduced-motion. Images are embedded so the page loads as one self-contained file.`,
+      images:['./img/marlerpics/marler1.jpg','./img/marlerpics/marler2.jpg','./img/marlerpics/marler3.jpg','./img/marlerpics/marler4.jpg','./img/marlerpics/marler5.jpg','./img/marlerpics/marler6.jpg'],
+      links:[{label:'Visit live site ↗', href:'https://marlerenterprises.com/'}],
+      cam:{ pos:[164, 0, -26], look:[131, 0, 0] }   //  set with T tuner 
     },
   ];
 
