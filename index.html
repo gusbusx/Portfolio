@@ -103,12 +103,12 @@
     box-shadow:0 10px 32px rgba(255,179,71,.45);
     transform:translateY(-2px)}
 
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px}
   .stat{border-top:1px solid var(--line);padding-top:16px}
   .stat .num{font-family:'Sora';font-size:clamp(24px,4vw,38px);font-weight:700}
   .stat .num.a{color:var(--amber)}.stat .num.c{color:var(--cyan)}.stat .num.v{color:var(--violet)}
   .stat .cap{color:var(--muted);font-size:13px;margin-top:2px}
-  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+  @media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
 
   .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
   .tab{display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border-radius:12px;cursor:pointer;
@@ -126,7 +126,7 @@
   .tab.on.p{background:linear-gradient(120deg,rgba(255,93,162,.22),rgba(255,93,162,.06));border-color:rgba(255,93,162,.5);box-shadow:0 0 24px rgba(255,93,162,.15)}
   .tab.on.b{background:linear-gradient(120deg,rgba(95,168,255,.22),rgba(95,168,255,.06));border-color:rgba(95,168,255,.5);box-shadow:0 0 24px rgba(95,168,255,.15)}
 
-  .panel{display:none;animation:fade .5s}
+  .panel{display:none;animation:panelIn .75s cubic-bezier(.16,1,.3,1)}
   .panel.show{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
@@ -181,6 +181,25 @@
     padding:13px 15px;color:var(--ink);font-family:inherit;font-size:15px;transition:.2s}
   .field input:focus,.field textarea:focus{outline:none;border-color:var(--cyan);background:rgba(34,211,238,.05)}
   .field textarea{resize:vertical;min-height:150px}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  @media(max-width:560px){.frow{grid-template-columns:1fr}}
+  .field label i{font-style:normal;color:#ff6b6b}
+  .field label em{font-style:normal;font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+  .ferr{display:block;min-height:0;font-size:12.5px;color:#ff8080;margin-top:6px}
+  .ferr:empty{display:none}
+  .field.bad input,.field.bad textarea,.field.bad .phone{border-color:#ff6b6b;background:rgba(255,107,107,.06)}
+  .phone{display:flex;align-items:stretch;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;transition:.2s}
+  .phone:focus-within{border-color:var(--cyan);background:rgba(34,211,238,.05)}
+  .field .phone-cc{position:relative;display:flex;align-items:center;flex:none;padding:0 12px 0 14px;border-right:1px solid var(--line);cursor:pointer;margin:0}
+  .phone-face{display:inline-flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:var(--ink);pointer-events:none;font-variant-numeric:tabular-nums}
+  .phone-flag{font-size:19px;line-height:1}
+  .phone-cc select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+  .phone-cc select option{color:#111;background:#fff}
+  .field .phone input{border:0;background:none;border-radius:0}
+  .field .phone input:focus{background:none}
+  .fnote{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
+  .fnote.ok{color:#34d399}.fnote.err{color:#ff8080}
+  .sendbtn.ok{background:#34d399;color:#06281a;border-color:#34d399}
   .sendbtn{width:100%;padding:15px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);
     color:var(--ink);font-family:'Sora';font-weight:600;font-size:15px;cursor:pointer;transition:.25s}
   .sendbtn:hover{background:var(--cyan);color:#0a0d14;border-color:var(--cyan)}
@@ -196,7 +215,7 @@
     background:var(--bg);border-top:1px solid var(--line)}
   footer .h{color:var(--pink)}
 
-  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal{opacity:0;transform:translateY(64px);transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1)}
   .reveal.in{opacity:1;transform:none}
   /* ===== your liquid-glass card ===== */
   .d-glass-card{position:relative;overflow:hidden;border-radius:32px}
@@ -287,7 +306,458 @@
   .witem .wbtn{margin-top:12px}
 
   
-  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.g-eyebrow,.g-name .gl,.g-sub,.scroll-cue{animation:none;opacity:1;transform:none}}
+
+  /* ===================== GUSIFY-STYLE MOTION ===================== */
+  :root{--gold:#C9A24A;--gold2:#e8c877;--ease-out:cubic-bezier(.16,1,.3,1)}
+  @keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+  @keyframes panelIn{from{opacity:0;transform:translateY(18px);clip-path:inset(0 0 35% 0)}to{opacity:1;transform:none;clip-path:inset(0 0 0 0)}}
+  @keyframes upIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes logoPop{from{opacity:0;transform:scale(.6) rotate(-12deg)}to{opacity:1;transform:none}}
+  @keyframes hmDraw{0%{stroke-dashoffset:1}30%,82%{stroke-dashoffset:0}100%{stroke-dashoffset:-1}}
+  @keyframes shine{from{background-position:130% 0}to{background-position:-130% 0}}
+
+  /* headlines rise out of a masked line */
+  .line{display:block;overflow:hidden;padding-bottom:.08em}
+  .line>span{display:inline-block;transform:translateY(110%)}
+  .reveal.in .line>span{transform:none;transition:transform 1.1s var(--ease-out) .15s}
+
+  /* eyebrow tick draws in */
+  .phase .eyebrow{display:flex;align-items:center;gap:0}
+  .phase .eyebrow::before{content:"";height:1px;width:0;background:currentColor;margin-right:0;transition:width .9s var(--ease-out) .1s,margin .9s var(--ease-out) .1s}
+  .reveal.in .eyebrow::before{width:28px;margin-right:12px}
+
+  /* gold text */
+  .gold-t{background:linear-gradient(100deg,#b8892f 0%,#e8c877 30%,#fff6dc 45%,#e8c877 60%,#b8892f 100%);background-size:250% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear 1s infinite}
+
+  /* hero identity */
+  .g-id{display:flex;flex-direction:column;gap:6px;margin-left:6px}
+  .g-id .line>span{animation:rise 1.1s var(--ease-out) both}
+  .g-id .line:nth-child(1)>span{animation-delay:4.2s}
+  .g-id .line:nth-child(2)>span{animation-delay:4.4s}
+  .g-name{font-family:'Sora';font-weight:600;font-size:clamp(19px,2.6vw,27px);color:#eef2fb;letter-spacing:-.01em}
+  .g-id .g-role{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:clamp(14px,1.9vw,18px);color:#c2c9d6;font-weight:500}
+  .g-brand{display:inline-flex;align-items:center;gap:7px;pointer-events:auto;font-family:'Sora';font-weight:700;font-size:1.08em}
+  .g-mark{width:1.2em;height:1.2em;overflow:visible;flex:none}
+  .g-mark path{fill:none;stroke:var(--gold);stroke-width:13;stroke-linejoin:miter;stroke-dasharray:1;stroke-dashoffset:1;
+    animation:hmDraw 8s cubic-bezier(.65,0,.35,1) 4.6s infinite;filter:drop-shadow(0 0 6px rgba(201,162,74,.6))}
+
+  /* stats stagger in */
+  .stat{opacity:0;transform:translateY(18px)}
+  .reveal.in .stat{opacity:1;transform:none;transition:opacity .7s ease calc(.35s + var(--i,0)*.1s),transform .9s var(--ease-out) calc(.35s + var(--i,0)*.1s)}
+  .stat .num.gd{background:linear-gradient(100deg,#b8892f,#e8c877 40%,#fff1c9 50%,#e8c877 60%,#b8892f);background-size:250% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear 1.5s infinite}
+  @media(max-width:1100px) and (min-width:901px){.stats{grid-template-columns:1fr 1fr}}
+
+  /* certifications button: shine sweep */
+  .cert-btn{position:relative;overflow:hidden}
+  .cert-btn::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.7) 50%,transparent 65%);transform:translateX(-120%);
+    animation:btnShine 4s ease-in-out 1.5s infinite}
+  @keyframes btnShine{0%,62%{transform:translateX(-120%)}86%,100%{transform:translateX(120%)}}
+  .cb-count{background:#3a2600;color:#ffd76a;border-radius:999px;font-size:12px;padding:1px 9px;margin-left:2px}
+
+  /* project / work panel contents cascade in */
+  .panel.show .pcard .logo{animation:logoPop .8s var(--ease-out) both}
+  .panel.show .pcard>div>*{animation:upIn .7s var(--ease-out) both}
+  .panel.show .pcard>div>*:nth-child(2){animation-delay:.06s}
+  .panel.show .pcard>div>*:nth-child(3){animation-delay:.12s}
+  .panel.show .pcard>div>*:nth-child(4){animation-delay:.18s}
+  .panel.show .pcard>div>*:nth-child(5){animation-delay:.24s}
+  .panel.show .witem>div{animation:upIn .7s var(--ease-out) both}
+  .panel.show .witem>div:nth-child(2){animation-delay:.1s}
+
+  /* Gusify gold tab + dark logos */
+  .tab.on.gd{background:linear-gradient(120deg,rgba(201,162,74,.28),rgba(201,162,74,.06));border-color:rgba(201,162,74,.6);box-shadow:0 0 26px rgba(201,162,74,.22)}
+  .tab .ico.ico-dark,.pcard .logo.logo-dark,.witem .wlogo.wlogo-dark{background:#0a0a0a;padding:0}
+  .founder-pill{border:1px solid rgba(201,162,74,.55);color:var(--gold2)!important;padding:3px 10px;border-radius:999px;
+    background:rgba(201,162,74,.1)}
+
+  /* ===================== CERTIFICATIONS ===================== */
+  .cert-modal.open .line>span{transform:none;transition:transform 1.1s var(--ease-out) .2s}
+  .cm-eyebrow{font-size:13px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold2);margin:10px 0 12px}
+  .cm-sub{color:var(--muted);margin-top:10px;max-width:56ch}
+  .cm-seal{width:48px;height:48px;overflow:visible}
+  .cm-seal *{fill:none;stroke:var(--gold);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .cert-modal.open .cm-seal *{stroke-dashoffset:0;transition:stroke-dashoffset 1.2s var(--ease-out) .15s}
+  .cert-modal.open .cm-seal *:nth-child(2){transition-delay:.55s}
+  .cert-modal.open .cm-seal *:nth-child(3),.cert-modal.open .cm-seal *:nth-child(4){transition-delay:.8s}
+  .cm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:30px;perspective:1200px}
+  .cert{opacity:0}
+  .cert-modal.open .cert{animation:certIn 1s var(--ease-out) calc(.3s + var(--i)*.15s) both}
+  @keyframes certIn{from{opacity:0;transform:translateY(70px) rotateX(22deg)}to{opacity:1;transform:none}}
+  .cert-in{height:100%;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.025);
+    transition:transform .25s ease,border-color .3s,box-shadow .3s;transform-style:preserve-3d;position:relative}
+  .cert-in:hover{border-color:rgba(201,162,74,.55);box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 30px rgba(201,162,74,.12)}
+  .cert-in::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,236,170,.13),transparent 45%)}
+  .cert-in:hover::after{opacity:1}
+  .cert-img{position:relative;display:block;width:100%;aspect-ratio:1.38;border:0;padding:0;background:#fff;cursor:zoom-in;overflow:hidden}
+  .cert-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease-out)}
+  .cert-in:hover .cert-img img{transform:scale(1.04)}
+  .cert-shine{position:absolute;inset:0;pointer-events:none;transform:translateX(-130%);
+    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.8) 47%,rgba(255,226,140,.55) 53%,transparent 70%)}
+  .cert-modal.open .cert-shine{animation:certShine 1.5s ease calc(1s + var(--i)*.15s) both}
+  .cert-in:hover .cert-shine{animation:certShine2 1.1s ease both}
+  @keyframes certShine{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+  @keyframes certShine2{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+  .cert-body{padding:20px 22px 22px}
+  .cert-issuer{display:flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .cert-issuer i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);flex:none}
+  .cert-body h3{font-size:19px;font-weight:600;margin:10px 0 12px;line-height:1.25}
+  .cert-body .stack{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .cert-body .stack span{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+  .cm-foot{margin-top:28px;color:var(--muted);font-size:14px;text-align:center}
+  .cm-foot a{color:var(--gold2);border-bottom:1px solid rgba(232,200,119,.35)}
+  .cm-foot a:hover{border-color:var(--gold2)}
+
+  /* ===================== ABOUT BUTTONS ===================== */
+  .about-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .about-btns .btn{margin-top:0;font-size:15px;font-weight:700;padding:12px 20px;cursor:pointer;font-family:inherit}
+  .li-btn{background:linear-gradient(135deg,#0a66c2,#004182);color:#fff;border:1px solid rgba(112,181,249,.45);
+    box-shadow:0 6px 24px rgba(10,102,194,.35)}
+  .li-btn:hover{background:linear-gradient(135deg,#2a86e0,#0a66c2);box-shadow:0 10px 32px rgba(10,102,194,.6);transform:translateY(-2px)}
+  .li-ico{width:20px;height:20px;border-radius:4px;background:#fff;color:#0a66c2;display:grid;place-items:center;flex:none}
+  .li-ico svg{width:13px;height:13px}
+  .cv-btn{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(6px)}
+  .cv-btn:hover{background:#eef2fb;color:#0a0d14;border-color:#eef2fb;transform:translateY(-2px)}
+  .cv-btn svg{width:17px;height:17px;flex:none}
+
+  /* ===================== HOVER PREVIEW ===================== */
+  .hp{position:fixed;left:0;top:0;z-index:150;width:340px;pointer-events:none;opacity:0;
+    transform:scale(.84) translateY(12px);filter:blur(8px);transform-origin:var(--ox,50%) 100%;
+    transition:opacity .22s ease,transform .55s var(--ease-out),filter .35s ease}
+  .hp.below{transform:scale(.84) translateY(-12px);transform-origin:var(--ox,50%) 0}
+  .hp.on{opacity:1;transform:none;filter:none}
+  .hp-win{border-radius:14px;overflow:hidden;background:#0d111a;border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 40px -10px var(--hpc,#22d3ee)}
+  .hp-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#161b26;border-bottom:1px solid rgba(255,255,255,.08)}
+  .hp-dots{display:flex;gap:5px;flex:none}.hp-dots i{width:8px;height:8px;border-radius:50%}
+  .hp-dots i:nth-child(1){background:#ff5f57}.hp-dots i:nth-child(2){background:#febc2e}.hp-dots i:nth-child(3){background:#28c840}
+  .hp-url{flex:1;min-width:0;height:20px;border-radius:999px;background:rgba(255,255,255,.07);font-size:10.5px;color:#aab3c5;
+    display:flex;align-items:center;justify-content:center;gap:5px;overflow:hidden;white-space:nowrap;padding:0 10px}
+  .hp-url svg{width:9px;height:9px;flex:none}
+  .hp-view{position:relative;aspect-ratio:16/10;overflow:hidden;background:#f4f4f2}
+  .pv-strip{position:absolute;left:0;top:0;width:100%;display:block;will-change:transform}
+  .pv-sl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;
+    transform:translateY(12%) scale(1.05);transition:opacity .6s ease,transform 1s var(--ease-out)}
+  .pv-sl.contain{object-fit:contain;background:#0d111a}
+  .pv-sl.on{opacity:1;transform:none}
+  .pv-sl.out{opacity:0;transform:translateY(-8%) scale(.97)}
+  .pv-prog{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--hpc,#22d3ee);transform-origin:0 50%;transform:scaleX(0);z-index:2}
+  .pv-dots{position:absolute;right:8px;bottom:9px;display:flex;gap:4px;z-index:2}
+  .pv-dots i{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.25);box-shadow:0 0 0 1px rgba(255,255,255,.6);transition:.3s}
+  .pv-dots i.on{background:var(--hpc,#22d3ee);width:14px;border-radius:3px}
+  .hp-cap{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;padding:0 4px;font-size:12px;color:#c2c9d6;
+    text-shadow:0 1px 8px rgba(0,0,0,.8)}
+  .hp-cap b{color:#fff;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hp-cap span{color:var(--hpc,#22d3ee);white-space:nowrap;font-weight:600}
+  @media (hover:none){.hp{display:none}}
+  /* LinkedIn mini profile */
+  .hp-li{background:#fff;color:#1d2226;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif}
+  .hp-li .cov{height:62px;background:linear-gradient(120deg,#004182,#0a66c2 45%,#70b5f9 80%,#c9a24a);background-size:200% 100%;animation:shine 6s linear infinite}
+  .hp-li .av{width:68px;height:68px;border-radius:50%;border:3px solid #fff;margin:-36px 0 0 16px;background:#dde center/cover;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  .hp-li .bd{padding:6px 16px 14px}
+  .hp-li h4{font-family:inherit;font-size:17px;letter-spacing:0;margin:0;display:flex;align-items:center;gap:6px}
+  .hp-li h4 small{font-size:11px;color:#666;font-weight:400}
+  .hp-li p{font-size:12px;line-height:1.4;color:#38434f;margin:3px 0 0}
+  .hp-li .loc{color:#666;font-size:11px;margin-top:4px}
+  .hp-li .row{display:flex;gap:8px;margin-top:10px}
+  .hp-li .row i{font-style:normal;font-size:12px;font-weight:600;border-radius:999px;padding:5px 14px;border:1px solid #0a66c2;color:#0a66c2}
+  .hp-li .row i:first-child{background:#0a66c2;color:#fff;animation:liPulse 1.8s ease-out .6s infinite}
+  @keyframes liPulse{0%{box-shadow:0 0 0 0 rgba(10,102,194,.55)}70%{box-shadow:0 0 0 9px rgba(10,102,194,0)}100%{box-shadow:0 0 0 0 rgba(10,102,194,0)}}
+  .hp-li .exp{display:flex;align-items:center;gap:7px;margin-top:11px;padding-top:10px;border-top:1px solid #e8e8e8;font-size:11px;color:#666}
+  .hp-li .exp img{width:26px;height:26px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid #e6e6e6;opacity:0;
+    animation:upIn .5s var(--ease-out) forwards}
+  .hp-li .exp img.dk{background:#0a0a0a}
+  /* GitHub mini card */
+  .hp-gh{background:#0d1117;color:#e6edf3;padding:14px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif}
+  .hp-gh .hd{display:flex;align-items:center;gap:10px}
+  .hp-gh .hd img{width:40px;height:40px;border-radius:50%;background:#fff;padding:5px}
+  .hp-gh .hd b{display:block;font-size:15px}.hp-gh .hd small{color:#7d8590;font-size:12px}
+  .hp-gh .rp{margin-top:10px;border:1px solid #30363d;border-radius:8px;padding:9px 11px;opacity:0;animation:upIn .5s var(--ease-out) forwards}
+  .hp-gh .rp b{color:#4493f8;font-size:13px}.hp-gh .rp p{color:#7d8590;font-size:11.5px;margin-top:2px}
+  .hp-gh .rp em{font-style:normal;font-size:11px;color:#7d8590;display:inline-flex;align-items:center;gap:5px;margin-top:5px}
+  .hp-gh .rp em i{width:9px;height:9px;border-radius:50%;background:var(--lc)}
+
+  /* ===================== POP-OUT (Gusify fly-in) ===================== */
+  @keyframes flyIn{0%{opacity:0;transform:perspective(1200px) translateZ(-1200px) scale(.7);filter:blur(12px)}
+    55%{opacity:1;filter:blur(0)}80%{transform:perspective(1200px) translateZ(36px)}100%{opacity:1;transform:none;filter:none}}
+  .fly{animation:flyIn .85s var(--ease-out) both;transform-origin:var(--fo,50% 45%)}
+
+  /* full-screen pages (certifications, resume, presentation) */
+  .pg{position:fixed;inset:0;z-index:95;overflow-y:auto;background:rgba(5,7,13,.9);backdrop-filter:blur(16px);opacity:0;pointer-events:none;
+    transition:opacity .35s ease;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.22) transparent}
+  .pg.open{opacity:1;pointer-events:auto}
+  .pg-bar{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:12px clamp(16px,4vw,48px);background:rgba(5,7,13,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .pg-bar .pg-tag{font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold2);display:flex;align-items:center;gap:10px}
+  .pg-acts{display:flex;align-items:center;gap:10px}
+  .pg-acts .btn{padding:8px 14px;font-size:13px}
+  .pg-x{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;
+    font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.25s;flex:none}
+  .pg-x:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+  .pg-in{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,80px) clamp(16px,4vw,48px) 110px}
+  .pg-title{font-size:clamp(44px,8vw,112px);font-weight:700;letter-spacing:-.045em;line-height:.95}
+  .pg.open .pg-title .line>span{transform:none;transition:transform 1.1s var(--ease-out) .3s}
+  .pg-sub{color:#c2c9d6;font-size:clamp(15px,1.8vw,18px);max-width:62ch;margin-top:22px}
+  @media(max-width:640px){.pg-acts .btn{display:none}}
+
+  /* certifications page */
+  .cf{display:flex;flex-wrap:wrap;gap:10px;margin:40px 0 4px}
+  .cf button{font-family:inherit;font-size:14px;font-weight:600;padding:9px 16px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;transition:.25s}
+  .cf button:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+  .cf button.on{color:#1d1406;background:linear-gradient(135deg,#ffd76a,#e8c877);border-color:transparent}
+  .cf button em{font-style:normal;opacity:.65;margin-left:5px}
+  .cert.hide{display:none}
+  .cert-art{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1.38;overflow:hidden;
+    background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--c) 38%,#0b0e16),#080a10 70%)}
+  .cert-art::before{content:"";position:absolute;width:62%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 0 0 18px rgba(255,255,255,.025),0 0 0 40px rgba(255,255,255,.015)}
+  .cert-art svg{width:34%;height:auto;overflow:visible;position:relative}
+  .cert-art svg *{fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .cert-modal.open .cert-art svg *{stroke-dashoffset:0;transition:stroke-dashoffset 1.6s var(--ease-out) calc(.6s + var(--i)*.12s)}
+  .cert-art .ca-k{position:absolute;left:16px;top:14px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+  .cert-img.deck-img img{object-position:left center}
+
+  /* resume page */
+  .cv-pages{display:flex;flex-direction:column;align-items:center;gap:26px;margin-top:44px;perspective:1400px}
+  .cv-pages img{width:min(860px,100%);border-radius:10px;background:#fff;box-shadow:0 40px 90px rgba(0,0,0,.55);opacity:0}
+  .pg.open .cv-pages img{animation:certIn 1.1s var(--ease-out) calc(.35s + var(--i)*.2s) both}
+
+  /* presentation page */
+  .dk-stage{position:relative;margin-top:40px;border-radius:16px;overflow:hidden;background:#0d111a;border:1px solid var(--line);
+    box-shadow:0 40px 90px rgba(0,0,0,.55);aspect-ratio:16/9}
+  .dk-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1s var(--ease-out)}
+  .dk-stage img.on{opacity:1;transform:none}
+  .dk-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;z-index:2;cursor:pointer;
+    background:rgba(5,7,13,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:22px;display:grid;place-items:center;transition:.25s;backdrop-filter:blur(6px)}
+  .dk-nav:hover{background:rgba(5,7,13,.85)}
+  .dk-prev{left:14px}.dk-next{right:14px}
+  .dk-prog{position:absolute;left:0;bottom:0;height:3px;width:100%;background:#34d399;transform-origin:0 50%;transform:scaleX(0);z-index:2}
+  .dk-meta{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:14px;color:var(--muted);font-size:14px;flex-wrap:wrap}
+  .dk-play{font-family:inherit;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:13px}
+  .dk-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:18px}
+  .dk-thumbs button{padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none;opacity:.55;transition:.25s}
+  .dk-thumbs button:hover{opacity:.9}
+  .dk-thumbs button.on{opacity:1;border-color:#34d399}
+  .dk-thumbs img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+
+  /* project detail: browser that opens the site, then scrolls on its own */
+  .csb{margin:0 0 30px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:#0d111a;
+    box-shadow:0 30px 60px -28px rgba(0,0,0,.8)}
+  .csb .hp-bar{padding:10px 14px}.csb .hp-dots i{width:10px;height:10px}
+  .csb .hp-url{height:26px;font-size:12.5px;max-width:420px;margin:0 auto}
+  .csb-view{position:relative;aspect-ratio:16/9;overflow:hidden;background:#f4f4f2}
+  .csb-start{position:absolute;inset:0;z-index:3;display:grid;place-items:center;background:#f4f4f2;animation:csStart 2.4s ease both;pointer-events:none}
+  .csb-start span{background:#0a0d14;color:#fff;border-radius:999px;padding:11px 20px;font-weight:600;font-size:14px;animation:bPress 2.4s both}
+  .csb-load{position:absolute;left:0;top:0;z-index:4;width:100%;height:3px;background:var(--hpc,#22d3ee);transform-origin:0 50%;animation:csLoad 2.4s ease both}
+  .csb-cursor{position:absolute;inset:0;z-index:5;pointer-events:none;animation:csCursor 2.4s var(--ease-out) both}
+  .csb-cursor svg{width:22px;height:22px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+  .csb-site{position:absolute;inset:0;opacity:0;animation:fadeIn .8s ease 1.4s both}
+  .csb-type{overflow:hidden;white-space:nowrap;display:inline-block;max-width:0;vertical-align:bottom;animation:csType .9s steps(24,end) .25s forwards}
+  .csb-note{margin:-18px 0 28px;font-size:12.5px;color:var(--muted)}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes csStart{0%,50%{opacity:1}70%,100%{opacity:0}}
+  @keyframes csLoad{0%,40%{transform:scaleX(0);opacity:1}75%{transform:scaleX(1);opacity:1}85%,100%{transform:scaleX(1);opacity:0}}
+  @keyframes csCursor{0%{transform:translate(80%,85%);opacity:0}15%{opacity:1}40%,52%{transform:translate(52%,53%);opacity:1}80%{transform:translate(64%,60%);opacity:1}100%{transform:translate(64%,60%);opacity:0}}
+  @keyframes bPress{0%,40%{transform:none}46%{transform:scale(.9)}52%,100%{transform:none}}
+  @keyframes csType{to{max-width:420px}}
+  .pd-links .btn{cursor:pointer;font-family:inherit}
+
+  /* ===================== PILL BUTTONS (match the nav) ===================== */
+  .btn,.tab,.sendbtn,.social a,.about-btns .btn,.pg-acts .btn{border-radius:999px}
+  .tab .ico{border-radius:50%}
+  .btn{padding:10px 20px}
+  .sendbtn{padding:15px 22px}
+
+  /* ===================== TECH CHIPS (logo + brand color) ===================== */
+  .pcard .stack{gap:8px}
+  .pcard .stack .tech{display:inline-flex;align-items:center;gap:7px;padding:5px 13px 5px 10px;border-radius:999px;
+    font-size:12.5px;font-weight:600;letter-spacing:.01em;color:color-mix(in srgb,var(--tc) 38%,#fff);
+    border:1px solid color-mix(in srgb,var(--tc) 55%,transparent);
+    background:linear-gradient(135deg,color-mix(in srgb,var(--tc) 24%,transparent),color-mix(in srgb,var(--tc) 8%,transparent));
+    box-shadow:0 0 20px -8px var(--tc);transition:transform .25s var(--ease-out),box-shadow .25s}
+  .pcard .stack .tech:hover{transform:translateY(-2px);box-shadow:0 6px 22px -6px var(--tc)}
+  .pcard .stack .tech svg{width:14px;height:14px;fill:var(--tc);flex:none;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--tc) 50%,transparent))}
+  .panel.show .pcard .stack .tech{animation:upIn .55s var(--ease-out) both;animation-delay:calc(.22s + var(--k)*.06s)}
+  .panel.show .pcard>div>.stack{animation:none}
+
+  /* ===================== VIDEO / LIVE PREVIEWS ===================== */
+  .pv-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block;background:#f4f4f2}
+  .pv-live{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .9s ease;pointer-events:none;z-index:1}
+  .pv-live.on{opacity:1}
+  .pv-live iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;background:#fff}
+  .pv-live-tag{position:absolute;left:10px;bottom:10px;z-index:3;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(10,13,20,.7);backdrop-filter:blur(6px);padding:5px 10px;border-radius:999px;
+    opacity:0;transition:opacity .6s}
+  .pv-live.on~.pv-live-tag{opacity:1}
+  .pv-live-tag i{width:7px;height:7px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.7);animation:livePulse 1.6s infinite}
+  @keyframes livePulse{70%{box-shadow:0 0 0 7px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+  .pv-sl.on{animation:kb 3.4s linear both}
+  /* live phone (Root) */
+  .hp-view.phone{aspect-ratio:4/5}
+  .csb-view.phone{aspect-ratio:auto;height:min(64vh,620px)}
+  .hp-view.phone,.csb-view.phone,.csb-view.phone .csb-start{background:radial-gradient(120% 80% at 50% 20%,#2c6b45,#0f2a1b 70%)}
+  .csb-view.phone .csb-start span{background:#34d399;color:#06281a}
+  .ph{position:absolute;left:50%;top:50%;width:414px;height:868px;border-radius:62px;background:#0b0d10;padding:12px;transform-origin:50% 50%;
+    box-shadow:0 0 0 2px #2a2f36,0 0 0 9px #14171c,0 40px 90px rgba(0,0,0,.55),0 0 60px -10px rgba(52,211,153,.45)}
+  .ph-scr{position:relative;width:390px;height:844px;border-radius:50px;overflow:hidden;background:#f4efe6}
+  .ph-scr iframe{position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;transition:opacity .8s ease}
+  .ph-scr.on iframe{opacity:1}
+  .ph-isl{position:absolute;top:24px;left:50%;transform:translateX(-50%);width:122px;height:34px;border-radius:20px;background:#000;z-index:2;pointer-events:none}
+  .ph-boot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    background:linear-gradient(180deg,#1f4d33,#123222);color:#eaf7ef;transition:opacity .8s ease;font-family:Georgia,'Times New Roman',serif}
+  .ph-scr.on .ph-boot{opacity:0}
+  .ph-boot b{font-size:64px;font-weight:700;letter-spacing:-.02em}
+  .ph-boot span{font-style:italic;color:#e8a36b;font-size:20px}
+  .ph-boot i{margin-top:30px;width:38px;height:38px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:#34d399;animation:spin 1s linear infinite}
+  .hp-view.phone .ph{pointer-events:none}
+  @keyframes kb{from{transform:scale(1.0)}to{transform:scale(1.07)}}
+
+  /* ===================== GMAIL-STYLE INBOX ===================== */
+  .gm-pg{background:rgba(3,5,10,.72)}
+  .gm.pg-in{max-width:none;margin:0;padding:0;height:100%;display:grid;grid-template-columns:256px 1fr;grid-template-rows:64px 1fr;
+    background:#f6f8fc;color:#1f1f1f;font-family:Roboto,'Inter',system-ui,sans-serif;min-height:100%}
+  .gm *{letter-spacing:normal}
+  .gm-top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:8px 16px 8px 12px}
+  .gm-ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:0;background:none;cursor:pointer;color:#444746;flex:none;transition:background .2s}
+  .gm-ib:hover{background:rgba(68,71,70,.1)}
+  .gm-ib svg{width:22px;height:22px}
+  .gm-brand{display:flex;align-items:center;gap:8px;width:190px;flex:none}
+  .gm-brand img{width:36px;height:36px;object-fit:contain;border-radius:8px}
+  .gm-brand b{font-family:'Sora',sans-serif;font-weight:500;font-size:21px;color:#444746}
+  .gm-search{flex:1;max-width:720px;display:flex;align-items:center;gap:10px;height:48px;border-radius:999px;background:#e9eef6;padding:0 6px 0 4px;transition:.2s}
+  .gm-search:focus-within{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .gm-search input{flex:1;border:0;background:none;font:inherit;font-size:16px;color:#1f1f1f;outline:none}
+  .gm-tr{margin-left:auto;display:flex;align-items:center;gap:6px}
+  .gm-av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:#ddd}
+  .gm-side{padding:8px 12px 8px 8px;display:flex;flex-direction:column;gap:2px;overflow:auto}
+  .gm-compose-btn{display:inline-flex;align-items:center;gap:12px;align-self:flex-start;height:56px;padding:0 24px 0 18px;margin:0 0 14px;
+    border-radius:16px;border:0;background:#c2e7ff;color:#001d35;font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.12);transition:box-shadow .2s,transform .2s}
+  .gm-compose-btn:hover{box-shadow:0 4px 12px rgba(0,0,0,.18);transform:translateY(-1px)}
+  .gm-compose-btn svg{width:22px;height:22px}
+  .gm-nav{display:flex;align-items:center;gap:16px;height:34px;padding:0 14px 0 22px;border-radius:0 999px 999px 0;border:0;background:none;
+    font:inherit;font-size:14px;color:#202124;cursor:pointer;text-align:left}
+  .gm-nav:hover{background:#eaebef}
+  .gm-nav.on{background:#d3e3fd;font-weight:700;color:#001d35}
+  .gm-nav svg{width:19px;height:19px;flex:none}
+  .gm-nav em{margin-left:auto;font-style:normal;font-size:12px;font-weight:700}
+  .gm-main{background:#fff;border-radius:16px;margin:0 16px 16px 0;display:flex;flex-direction:column;overflow:hidden;min-height:0;position:relative}
+  .gm-tool{display:flex;align-items:center;gap:4px;height:48px;padding:0 10px;border-bottom:1px solid #f1f3f4;color:#444746;font-size:12px}
+  .gm-tool .gm-ib{width:40px;height:40px}.gm-tool .gm-ib svg{width:20px;height:20px}
+  .gm-tool span{margin-left:auto;padding-right:8px}
+  .gm-tabs{display:flex;border-bottom:1px solid #f1f3f4}
+  .gm-tab{flex:0 1 250px;display:flex;align-items:center;gap:14px;height:56px;padding:0 16px;border:0;background:none;font:inherit;font-size:14px;
+    color:#444746;cursor:pointer;position:relative;text-align:left;transition:background .2s}
+  .gm-tab:hover{background:#f6f8fc}
+  .gm-tab svg{width:20px;height:20px;flex:none}
+  .gm-tab.on{color:var(--gc);font-weight:600}
+  .gm-tab.on::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--gc)}
+  .gm-tab b{font-size:11px;font-weight:700;color:#fff;background:var(--gc);padding:1px 8px;border-radius:999px;margin-left:auto}
+  .gm-list{overflow:auto;flex:1}
+  .gm-row{display:grid;grid-template-columns:28px 28px 200px 1fr auto;align-items:center;gap:6px;height:44px;padding:0 16px 0 10px;
+    border-bottom:1px solid #f1f3f4;cursor:pointer;background:#f2f6fc;font-size:14px;color:#202124;position:relative;
+    opacity:0;transform:translateY(10px);animation:upIn .5s var(--ease-out) forwards;animation-delay:calc(.25s + var(--k)*.07s)}
+  .gm-row.read{background:#fff}
+  .gm-row:hover{box-shadow:inset 1px 0 0 #dadce0,inset -1px 0 0 #dadce0,0 1px 2px 0 rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);z-index:1}
+  .gm-row .ck{width:18px;height:18px;border:2px solid #5f6368;border-radius:3px;opacity:.6}
+  .gm-row .st{width:20px;height:20px;color:#c4c7c5;cursor:pointer}
+  .gm-row .st.on{color:#f4b400}
+  .gm-row .fr,.gm-row .sj{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gm-row:not(.read) .fr,.gm-row:not(.read) .sj b,.gm-row:not(.read) .tm{font-weight:700}
+  .gm-row .sj b{font-weight:500}
+  .gm-row .sj span{color:#5f6368}
+  .gm-row .sj .lbl{color:#fff}
+  .gm-search{min-width:0}.gm-search input{min-width:0;width:100%}
+  .gm-cmp.on~.gm-fab{display:none!important}
+  .gm-row .tm{font-size:12px;color:#5f6368;padding-left:10px}
+  .gm-row .lbl{font-size:11px;padding:1px 7px;border-radius:4px;margin-right:6px;font-weight:600;color:#fff;background:var(--lc)}
+  .gm-row.new{animation:gmNew .8s var(--ease-out) both}
+  @keyframes gmNew{from{opacity:0;transform:translateY(-100%);background:#fff7d6}to{opacity:1;transform:none}}
+  .gm-read{position:absolute;inset:0;background:#fff;overflow:auto;padding:12px 28px 40px;transform:translateX(30px);opacity:0;pointer-events:none;
+    transition:transform .45s var(--ease-out),opacity .3s}
+  .gm-read.on{transform:none;opacity:1;pointer-events:auto}
+  .gm-read h2{font-family:Roboto,'Inter',sans-serif;font-size:22px;font-weight:400;letter-spacing:0;margin:14px 0 18px 52px;color:#1f1f1f;line-height:1.3}
+  .gm-from{display:flex;align-items:center;gap:12px}
+  .gm-from .gm-av{width:40px;height:40px}
+  .gm-from b{font-size:14px}.gm-from small{color:#5f6368;font-size:12px;display:block}
+  .gm-from .tm{margin-left:auto;color:#5f6368;font-size:12px}
+  .gm-body{margin:14px 0 0 52px;font-size:14px;line-height:1.65;color:#222;max-width:68ch}
+  .gm-body p{margin-bottom:12px}
+  .gm-att{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 0 52px}
+  .gm-att button,.gm-att a{display:flex;align-items:center;gap:10px;border:1px solid #dadce0;border-radius:8px;padding:10px 14px;background:#fff;
+    font:inherit;font-size:13px;color:#1f1f1f;cursor:pointer;transition:.2s}
+  .gm-att button:hover,.gm-att a:hover{background:#f6f8fc;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .gm-att i{width:26px;height:26px;border-radius:4px;display:grid;place-items:center;color:#fff;font-style:normal;font-size:10px;font-weight:800;background:var(--ac)}
+  .gm-acts{display:flex;gap:10px;margin:24px 0 0 52px;flex-wrap:wrap}
+  .gm-pill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;border-radius:999px;border:1px solid #747775;background:#fff;
+    color:#1f1f1f;font:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:.2s}
+  .gm-pill:hover{background:#f2f2f2}
+  .gm-pill.pri{background:#0b57d0;border-color:#0b57d0;color:#fff}
+  .gm-pill.pri:hover{background:#0842a0;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .gm-empty{padding:60px 20px;text-align:center;color:#5f6368;font-size:14px}
+  /* compose window */
+  .gm-cmp{position:fixed;right:24px;bottom:0;z-index:5;width:min(540px,calc(100vw - 24px));background:#fff;border-radius:16px 16px 0 0;
+    box-shadow:0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2);
+    font-family:Roboto,'Inter',sans-serif;color:#1f1f1f;transform:translateY(110%);transition:transform .55s var(--ease-out);display:flex;flex-direction:column}
+  .gm-cmp.on{transform:none}
+  .gm-cmp.min{transform:translateY(calc(100% - 44px))}
+  .gm-cmp-h{display:flex;align-items:center;gap:6px;height:44px;padding:0 8px 0 16px;background:#f2f6fc;border-radius:16px 16px 0 0;font-size:14px;font-weight:600;cursor:pointer}
+  .gm-cmp-h span{flex:1}
+  .gm-cmp-h button{width:30px;height:30px;border-radius:50%;border:0;background:none;cursor:pointer;color:#444746;font-size:16px;display:grid;place-items:center}
+  .gm-cmp-h button:hover{background:rgba(0,0,0,.08)}
+  .gm-f{display:flex;align-items:center;gap:8px;border-bottom:1px solid #f1f3f4;margin:0 16px;min-height:40px;font-size:14px}
+  .gm-f label{color:#5f6368;flex:none}
+  .gm-f input{flex:1;border:0;outline:none;font:inherit;font-size:14px;color:#1f1f1f;background:none;padding:9px 0}
+  .gm-chip{display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border-radius:999px;padding:3px 10px 3px 3px;font-size:13px}
+  .gm-chip img{width:22px;height:22px;border-radius:50%;object-fit:cover}
+  .gm-cmp textarea{border:0;outline:none;resize:none;font:inherit;font-size:14px;line-height:1.55;color:#1f1f1f;margin:10px 16px;min-height:200px}
+  .gm-cmp-f{display:flex;align-items:center;gap:12px;padding:10px 16px 16px}
+  .gm-send{height:40px;padding:0 24px;border-radius:999px;border:0;background:#0b57d0;color:#fff;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+  .gm-send:hover{background:#0842a0;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .gm-send:disabled{opacity:.6;cursor:default}
+  .gm-cmp-f a{font-size:13px;color:#0b57d0;margin-left:auto}
+  .gm-err{font-size:12.5px;color:#b3261e;margin:0 16px}
+  .gm-toast{position:fixed;left:24px;bottom:24px;z-index:6;background:#303030;color:#f2f2f2;font-family:Roboto,'Inter',sans-serif;font-size:14px;
+    padding:14px 20px;border-radius:8px;box-shadow:0 3px 8px rgba(0,0,0,.4);transform:translateY(calc(100% + 60px));visibility:hidden;transition:transform .45s var(--ease-out),visibility 0s .45s;display:flex;gap:24px}
+  .gm-toast.on{transform:none;visibility:visible;transition:transform .45s var(--ease-out)}
+  .gm-toast button{border:0;background:none;color:#a8c7fa;font:inherit;font-weight:600;cursor:pointer}
+  @media(max-width:900px){
+    .gm.pg-in{grid-template-columns:1fr}
+    .gm-side{display:none}
+    .gm-brand{width:auto}.gm-brand b{display:none}
+    .gm-main{margin:0 8px 8px}
+    .gm-row{grid-template-columns:24px 110px 1fr auto;padding-left:6px}.gm-row .ck{display:none}
+    .gm-tab{flex:1;padding:0 10px;justify-content:center}.gm-tab svg,.gm-tab b{display:none}
+    .gm-top{gap:6px;padding:8px}.gm-brand img{width:30px;height:30px}
+    .gm-read h2,.gm-body,.gm-att,.gm-acts{margin-left:0}
+    .gm-cmp{right:12px}
+    .gm-fab{display:flex!important}
+  }
+  .gm-fab{display:none;position:fixed;right:18px;bottom:18px;z-index:96;align-items:center;gap:10px;height:56px;padding:0 20px;border-radius:16px;border:0;
+    background:#c2e7ff;color:#001d35;font:inherit;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  /* mini inbox for the hover preview */
+  .hp-gm{background:#f6f8fc;color:#1f1f1f;font-family:Roboto,'Inter',sans-serif}
+  .hp-gm .hd{display:flex;align-items:center;gap:8px;padding:9px 12px}
+  .hp-gm .hd img{width:22px;height:22px;object-fit:contain;border-radius:4px}
+  .hp-gm .hd b{font-size:14px;font-weight:500;color:#444746}
+  .hp-gm .hd span{margin-left:auto;flex:0 0 46%;height:22px;border-radius:999px;background:#e9eef6}
+  .hp-gm .bx{background:#fff;margin:0 8px 8px;border-radius:10px;overflow:hidden}
+  .hp-gm .rw{display:grid;grid-template-columns:78px 1fr auto;gap:8px;align-items:center;height:30px;padding:0 10px;border-bottom:1px solid #f1f3f4;font-size:11px;background:#f2f6fc}
+  .hp-gm .rw.rd{background:#fff}
+  .hp-gm .rw b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+  .hp-gm .rw.rd b{font-weight:500}
+  .hp-gm .rw span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5f6368}
+  .hp-gm .rw span em{font-style:normal;color:#1f1f1f;font-weight:600}
+  .hp-gm .rw small{font-size:10px;color:#5f6368}
+  .hp-gm .rw.nw{animation:hpNew 4s var(--ease-out) infinite}
+  @keyframes hpNew{0%,8%{height:0;opacity:0;background:#fff7d6}22%{height:30px;opacity:1;background:#fff7d6}60%{background:#fff7d6}80%,100%{height:30px;opacity:1;background:#f2f6fc}}
+  .hp-gm .cm{display:flex;justify-content:flex-end;padding:0 10px 10px}
+  .hp-gm .cm i{font-style:normal;font-size:11px;font-weight:600;background:#c2e7ff;color:#001d35;border-radius:10px;padding:7px 12px;animation:liPulse 1.8s ease-out .4s infinite}
+  @media(prefers-reduced-motion:reduce){.fly{animation:none}.pv-strip{animation:none!important}.line>span,.g-id .line>span{transform:none!important;animation:none!important}.stat,.cert{opacity:1!important;transform:none!important;animation:none!important}.g-mark path{animation:none;stroke-dashoffset:0}.reveal{opacity:1;transform:none}.g-eyebrow,.g-name .gl,.g-sub,.scroll-cue{animation:none;opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -331,7 +801,13 @@
           </defs>
         </svg>
       </div>
-      <span class="g-sub">Augusto Segura Portfolio</span>
+      <div class="g-id">
+        <span class="line"><span class="g-name">Augusto Segura</span></span>
+        <span class="line"><span class="g-role">Founder &amp; CEO of
+          <a class="g-brand" href="https://gusify.net" target="_blank" rel="noopener">
+            <svg class="g-mark" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M72,32 L50,10 L10,50 L50,90 L90,50 L54,50"/></svg>
+            <span class="gold-t">Gusify</span></a></span></span>
+      </div>
     </div>
   </div></div>
   <div class="scroll-cue" id="scrollCue"><span>scroll</span><i></i></div>
@@ -343,17 +819,18 @@
     <div class="eyebrow" style="color:var(--cyan)">About</div>
     <h2>Hello, I’m Augusto</h2>
     <p class="lead">
-      I’m <strong>Augusto Segura</strong>, a Computer Science student at
-      <strong>Rutgers University–New Brunswick</strong> graduating in 2027. I’m a
-      full-stack developer focused on building polished web, mobile, software, and
-      AI-powered products using technologies such as
-      <strong>Flutter, Dart, JavaScript, HTML, and CSS</strong>.
+      I’m <strong>Augusto Segura</strong>, the <strong>founder &amp; CEO of <span class="gold-t">Gusify</span></strong>,
+      a web design and development studio that builds premium, hand-coded websites for small businesses.
+      I’m also a Computer Science student at <strong>Rutgers University–New Brunswick</strong> graduating in 2027,
+      and a full-stack developer building polished web, mobile, software, and AI-powered products with
+      <strong>Flutter, Dart, JavaScript, React, Next.js, HTML, and CSS</strong>.
     </p>
     <p class="lead">
       I helped build <strong>ROOT</strong>, the first-place winner of the
       <strong>Fiserv × Rutgers Newark Hackathon</strong>, and I’m the founder of
-      <strong>CloudDrop</strong>. My other projects include
-      <strong>StudyWeapon</strong>, the <strong>2KD website</strong>, and the <strong>Marler Enterprises website</strong>. I also work
+      <strong>CloudDrop</strong>. Through Gusify I’ve shipped the
+      <strong>Marler Enterprises</strong> and <strong>2KD Hood Cleaning</strong> websites, and I also built
+      <strong>StudyWeapon</strong>. I also work
       as a Computer Technician for Elizabeth Public Schools, where I configure,
       maintain, and troubleshoot devices supporting more than
       <strong>2,000 students</strong>. I enjoy combining engineering, design, and
@@ -361,11 +838,19 @@
     </p>
 
     <div class="stats">
-      <div class="stat"><div class="num a">1st</div><div class="cap">Fiserv × Rutgers Hackathon</div></div>
-      <div class="stat"><div class="num c">'27</div><div class="cap">B.S. Computer Science</div></div>
-      <div class="stat"><div class="num v">3</div><div class="cap">Languages · EN · ES · PT</div></div>
-      <button class="btn cert-btn" id="certBtn">
-      <span>🏆</span> View My Certifications <span>🏆</span>
+      <div class="stat" style="--i:0"><div class="num gd">CEO</div><div class="cap">Founder · Gusify</div></div>
+      <div class="stat" style="--i:1"><div class="num a">1st</div><div class="cap">Fiserv × Rutgers Hackathon</div></div>
+      <div class="stat" style="--i:2"><div class="num c">'27</div><div class="cap">B.S. Computer Science</div></div>
+      <div class="stat" style="--i:3"><div class="num v">3</div><div class="cap">Languages · EN · ES · PT</div></div>
+    </div>
+    <div class="about-btns">
+      <button class="btn cert-btn" id="certBtn" data-pv="certs"><span>🏆</span> View my certifications <span class="cb-count" id="certCount">2</span></button>
+      <a class="btn li-btn" href="https://www.linkedin.com/in/gusbuses/" target="_blank" rel="noopener" data-pv="linkedin">
+        <span class="li-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
+        LinkedIn</a>
+      <button class="btn cv-btn" id="cvBtn" data-pv="resume">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+        View my resume</button>
     </div>
     </div>
     <!-- 3D depth-map portrait (tilts with your mouse) -->
@@ -382,21 +867,38 @@
     <div class="eyebrow" style="color:var(--pink)">Projects</div>
     <h2 style="margin-bottom:26px">Things I've shipped.</h2>
     <div class="tabs" id="ptabs">
-      <div class="tab on r" data-p="p0"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD Hood Cleaning</div>
+      <div class="tab on gd" data-p="p5"><span class="ico ico-img ico-dark"><img src="./img/gusify-logo.svg" alt=""></span> Gusify</div>
+      <div class="tab r" data-p="p0"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD Hood Cleaning</div>
       <div class="tab a" data-p="p4"><span class="ico ico-img"><img src="./img/marler-logo.png" alt=""></span> Marler Enterprises</div>
       <div class="tab b" data-p="p1"><span class="ico ico-img"><img src="./img/sw-logo.png" alt=""></span> Study Weapon</div>
       <div class="tab g" data-p="p3"><span class="ico ico-img"><img src="./img/root-logo.jpg" alt=""></span> Root</div>
       <div class="tab v" data-p="p2"><span class="ico ico-img"><img src="./img/clouddrop-logo.png" alt=""></span> CloudDrop</div>
     </div>
 
-    <div class="panel show" id="p0"><div class="pcard">
+    <div class="panel show" id="p5"><div class="pcard">
+      <div class="logo logo-img logo-dark"><img src="./img/gusify-logo.svg" alt=""></div>
+      <div>
+        <h3>Gusify <span class="role founder-pill">Founder &amp; CEO</span></h3>
+        <div class="role">Web design &amp; development studio · My company</div>
+        <p>I founded Gusify, an independent studio that designs and hand-codes premium websites for small businesses, and I run
+          it end to end: client calls, pricing, design, development, launch and ongoing care. The studio's own site is a Next.js app
+          on Cloudflare with live canvas dashboards, a hand-rendered 3D diamond and a plan builder with real-time pricing.</p>
+        <div class="stack"><span class="tech" style="--tc:#e8ecf4;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.665 21.978C16.758 23.255 14.465 24 12 24 5.377 24 0 18.623 0 12S5.377 0 12 0s12 5.377 12 12c0 3.583-1.574 6.801-4.067 9.001L9.219 7.2H7.2v9.596h1.615V9.251l9.85 12.727Zm-3.332-8.533 1.6 2.061V7.2h-1.6v6.245Z"/></svg>Next.js</span><span class="tech" style="--tc:#61DAFB;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/></svg>React</span><span class="tech" style="--tc:#3178C6;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/></svg>TypeScript</span><span class="tech" style="--tc:#FF5DA2;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM5 5v14h14V5zm2 10.5 3-4 2.2 2.8L15 10l3 5.5z"/></svg>Canvas</span><span class="tech" style="--tc:#F38020;--k:4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.213.063 8.879 12.136-8.67 11.739h2.476l8.665-11.735-8.89-12.14Zm4.728 0 9.02 11.992-9.018 11.883h2.496L24 12.656v-1.199L15.434.063ZM7.178 2.02.01 11.398l-.01 1.2 7.203 9.644 1.238-1.676-6.396-8.556 6.361-8.313Z"/></svg>Cloudflare Workers</span></div>
+        <div class="pbtns">
+          <a class="btn live" href="https://gusify.net/" target="_blank" rel="noopener">Visit gusify.net ↗</a>
+          <button class="btn more" data-proj="5">More details</button>
+        </div>
+      </div>
+    </div></div>
+
+    <div class="panel" id="p0"><div class="pcard">
       <div class="logo logo-img"><img src="./img/2kd-logo.png" alt=""></div>
       <div>
         <h3>2KD Kitchen Hood Cleaning</h3>
         <div class="role">Web Developer &amp; Digital Operations · Client work</div>
         <p>Designed and built the company's website end-to-end with 100% uptime. Integrated scheduling and
           customer-inquiry flows, handle 20+ client messages a week, and grew the brand's presence and engagement across platforms.</p>
-        <div class="stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>UI/UX</span></div>
+        <div class="stack"><span class="tech" style="--tc:#E34F26;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>HTML5</span><span class="tech" style="--tc:#1572B6;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS</span><span class="tech" style="--tc:#F7DF1E;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>JavaScript</span><span class="tech" style="--tc:#F38020;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771 0-.1611 0-.2383.0112-.0566 0-.1054.0415-.127.0976l-.3378 1.1744c-.1475.5068-.0918.9707.1543 1.3164.2256.3164.6055.498 1.0625.5195l1.8437.1133c.0557 0 .1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527 1.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771 0 .1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803 0-2.6025-2.125-4.727-4.7344-4.727"/></svg>Cloudflare</span></div>
         <div class="pbtns">
           <a class="btn live" href="https://2kdhoodcleaning.com/" target="_blank" rel="noopener">Visit live site ↗</a>
           <button class="btn more" data-proj="0">More details</button>
@@ -411,7 +913,7 @@
         <div class="role">Web App · Developer</div>
         <p>A study-focused web app built to help students learn faster and stay organized. Deployed on Vercel
           with a clean, responsive interface designed for focus.</p>
-        <div class="stack"><span>Web</span><span>JavaScript</span><span>Vercel</span><span>UI/UX</span></div>
+        <div class="stack"><span class="tech" style="--tc:#e8ecf4;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.665 21.978C16.758 23.255 14.465 24 12 24 5.377 24 0 18.623 0 12S5.377 0 12 0s12 5.377 12 12c0 3.583-1.574 6.801-4.067 9.001L9.219 7.2H7.2v9.596h1.615V9.251l9.85 12.727Zm-3.332-8.533 1.6 2.061V7.2h-1.6v6.245Z"/></svg>Next.js</span><span class="tech" style="--tc:#3178C6;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/></svg>TypeScript</span><span class="tech" style="--tc:#06B6D4;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/></svg>Tailwind CSS</span><span class="tech" style="--tc:#e8ecf4;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 22.525H0l12-21.05 12 21.05z"/></svg>Vercel</span></div>
         <div class="pbtns">
           <a class="btn live" href="https://studyweapon.vercel.app/" target="_blank" rel="noopener">Visit live site ↗</a>
           <button class="btn more" data-proj="1">More details</button>
@@ -426,9 +928,9 @@
         <div class="role">Founder &amp; Lead Developer</div>
         <p>Architected and shipped a full-stack product from the ground up — owning backend services and data flow
           through to a clean, user-centered interface. Engineered the end-to-end experience as both software engineer and designer.</p>
-        <div class="stack"><span>Full-Stack</span><span>UI/UX</span><span>Product</span></div>
+        <div class="stack"><span class="tech" style="--tc:#61DAFB;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/></svg>React</span><span class="tech" style="--tc:#3178C6;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/></svg>TypeScript</span><span class="tech" style="--tc:#E0234E;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.131.047c-.173 0-.334.037-.483.087.316.21.49.49.576.806.007.043.019.074.025.117a.681.681 0 0 1 .013.112c.024.545-.143.614-.26.936-.18.415-.13.861.086 1.22a.74.74 0 0 0 .074.137c-.235-1.568 1.073-1.803 1.314-2.293.019-.428-.334-.713-.613-.911a1.37 1.37 0 0 0-.732-.21zM16.102.4c-.024.143-.006.106-.012.18-.006.05-.006.112-.012.161-.013.05-.025.1-.044.149-.012.05-.03.1-.05.149l-.067.142c-.02.025-.031.05-.05.075l-.037.055a2.152 2.152 0 0 1-.093.124c-.037.038-.068.081-.112.112v.006c-.037.031-.074.068-.118.1-.13.099-.278.173-.415.266-.043.03-.087.056-.124.093a.906.906 0 0 0-.118.099c-.043.037-.074.074-.111.118-.031.037-.068.08-.093.124a1.582 1.582 0 0 0-.087.13c-.025.05-.043.093-.068.142-.019.05-.037.093-.05.143a2.007 2.007 0 0 0-.043.155c-.006.025-.006.056-.012.08-.007.025-.007.05-.013.075 0 .05-.006.105-.006.155 0 .037 0 .074.006.111 0 .05.006.1.019.155.006.05.018.1.03.15.02.049.032.098.05.148.013.03.031.062.044.087l-1.426-.552c-.241-.068-.477-.13-.719-.186l-.39-.093c-.372-.074-.75-.13-1.128-.167-.013 0-.019-.006-.031-.006A11.082 11.082 0 0 0 8.9 2.855c-.378.025-.756.074-1.134.136a12.45 12.45 0 0 0-.837.174l-.279.074c-.092.037-.18.08-.266.118l-.205.093c-.012.006-.024.006-.03.012-.063.031-.118.056-.174.087a2.738 2.738 0 0 0-.236.118c-.043.018-.086.043-.124.062a.559.559 0 0 1-.055.03c-.056.032-.112.063-.162.094a1.56 1.56 0 0 0-.148.093c-.044.03-.087.055-.124.086-.006.007-.013.007-.019.013-.037.025-.08.056-.118.087l-.012.012-.093.074c-.012.007-.025.019-.037.025-.031.025-.062.056-.093.08-.006.013-.019.02-.025.025-.037.038-.074.069-.111.106-.007 0-.007.006-.013.012a1.742 1.742 0 0 0-.111.106c-.007.006-.007.012-.013.012a1.454 1.454 0 0 0-.093.1c-.012.012-.03.024-.043.036a1.374 1.374 0 0 1-.106.112c-.006.012-.018.019-.024.03-.05.05-.093.1-.143.15l-.018.018c-.1.106-.205.211-.317.304-.111.1-.229.192-.347.273a3.777 3.777 0 0 1-.762.421c-.13.056-.267.106-.403.149-.26.056-.527.161-.756.18-.05 0-.105.012-.155.018l-.155.037-.149.056c-.05.019-.099.044-.148.068-.044.031-.093.056-.137.087a1.011 1.011 0 0 0-.124.106c-.043.03-.087.074-.124.111-.037.043-.074.08-.105.124-.031.05-.068.093-.093.143a1.092 1.092 0 0 0-.087.142c-.025.056-.05.106-.068.161-.019.05-.037.106-.056.161-.012.05-.025.1-.03.15 0 .005-.007.012-.007.018-.012.056-.012.13-.019.167C.006 7.95 0 7.986 0 8.03a.657.657 0 0 0 .074.31v.006c.019.037.044.075.069.112.024.037.05.074.08.111.031.031.068.069.106.1a.906.906 0 0 0 .117.099c.149.13.186.173.378.272.031.019.062.031.1.05.006 0 .012.006.018.006 0 .013 0 .019.006.031a1.272 1.272 0 0 0 .08.298c.02.037.032.074.05.111.007.013.013.025.02.031.024.05.049.093.073.137l.093.13c.031.037.069.08.106.118.037.037.074.068.118.105 0 0 .006.006.012.006.037.031.074.062.112.087a.986.986 0 0 0 .136.08c.043.025.093.05.142.069a.73.73 0 0 0 .124.043c.007.006.013.006.025.012.025.007.056.013.08.019-.018.335-.024.65.026.762.055.124.328-.254.6-.688-.036.428-.061.93 0 1.079.069.155.44-.329.763-.862 4.395-1.016 8.405 2.02 8.826 6.31-.08-.67-.905-1.041-1.283-.948-.186.458-.502 1.047-1.01 1.413.043-.41.025-.83-.062-1.24a4.009 4.009 0 0 1-.769 1.562c-.588.043-1.177-.242-1.487-.67-.025-.018-.031-.055-.05-.08-.018-.043-.037-.087-.05-.13a.515.515 0 0 1-.037-.13c-.006-.044-.006-.087-.006-.137v-.093a.992.992 0 0 1 .031-.13c.013-.043.025-.086.044-.13.024-.043.043-.087.074-.13.105-.298.105-.54-.087-.682a.706.706 0 0 0-.118-.062c-.024-.006-.055-.018-.08-.025l-.05-.018a.847.847 0 0 0-.13-.031.472.472 0 0 0-.13-.019 1.01 1.01 0 0 0-.136-.012c-.031 0-.062.006-.093.006a.484.484 0 0 0-.137.019c-.043.006-.086.012-.13.024a1.068 1.068 0 0 0-.13.044c-.043.018-.08.037-.124.056-.037.018-.074.043-.118.062-1.444.942-.582 3.148.403 3.787-.372.068-.75.148-.855.229l-.013.012c.267.161.546.298.837.416.397.13.818.247 1.004.297v.006a5.996 5.996 0 0 0 1.562.112c2.746-.192 4.996-2.281 5.405-5.033l.037.161c.019.112.043.23.056.347v.006c.012.056.018.112.025.162v.024c.006.056.012.112.012.162.006.068.012.136.012.204v.1c0 .03.007.067.007.098 0 .038-.007.075-.007.112v.087c0 .043-.006.08-.006.124 0 .025 0 .05-.006.08 0 .044-.006.087-.006.137-.006.018-.006.037-.006.055l-.02.143c0 .019 0 .037-.005.056-.007.062-.019.118-.025.18v.012l-.037.174v.018l-.037.167c0 .007-.007.02-.007.025a1.663 1.663 0 0 1-.043.168v.018c-.019.062-.037.118-.05.174-.006.006-.006.012-.006.012l-.056.186c-.024.062-.043.118-.068.18-.025.062-.043.124-.068.18-.025.062-.05.117-.074.18h-.007c-.024.055-.05.117-.08.173a.302.302 0 0 1-.019.043c-.006.006-.006.013-.012.019a5.867 5.867 0 0 1-1.742 2.082c-.05.031-.099.069-.149.106-.012.012-.03.018-.043.03a2.603 2.603 0 0 1-.136.094l.018.037h.007l.26-.037h.006c.161-.025.322-.056.483-.087.044-.006.093-.019.137-.031l.087-.019c.043-.006.086-.018.13-.024.037-.013.074-.02.111-.031.62-.15 1.221-.354 1.798-.595a9.926 9.926 0 0 1-3.85 3.142c.714-.05 1.426-.167 2.114-.366a9.903 9.903 0 0 0 5.857-4.68 9.893 9.893 0 0 1-1.667 3.986 9.758 9.758 0 0 0 1.655-1.376 9.824 9.824 0 0 0 2.61-5.268c.21.98.272 1.99.18 2.987 4.474-6.241.371-12.712-1.346-14.416-.006-.013-.012-.019-.012-.031-.006.006-.006.006-.006.012 0-.006 0-.006-.007-.012 0 .074-.006.148-.012.223a8.34 8.34 0 0 1-.062.415c-.03.136-.068.273-.105.41-.044.13-.093.266-.15.396a5.322 5.322 0 0 1-.185.378 4.735 4.735 0 0 1-.477.688c-.093.111-.192.21-.292.31a3.994 3.994 0 0 1-.18.155l-.142.124a3.459 3.459 0 0 1-.347.241 4.295 4.295 0 0 1-.366.211c-.13.062-.26.118-.39.174a4.364 4.364 0 0 1-.818.223c-.143.025-.285.037-.422.05a4.914 4.914 0 0 1-.297.012 4.66 4.66 0 0 1-.422-.025 3.137 3.137 0 0 1-.421-.062 3.136 3.136 0 0 1-.415-.105h-.007c.137-.013.273-.025.41-.05a4.493 4.493 0 0 0 .818-.223c.136-.05.266-.112.39-.174.13-.062.248-.13.372-.204.118-.08.235-.161.347-.248.112-.087.217-.18.316-.279.105-.093.198-.198.291-.304.093-.111.18-.223.26-.334.013-.019.026-.044.038-.062.062-.1.124-.199.18-.298a4.272 4.272 0 0 0 .334-.775c.044-.13.075-.266.106-.403.025-.142.05-.278.062-.415.012-.142.025-.285.025-.421 0-.1-.007-.199-.013-.298a6.726 6.726 0 0 0-.05-.415 4.493 4.493 0 0 0-.092-.415c-.044-.13-.087-.267-.137-.397-.05-.13-.111-.26-.173-.384-.069-.124-.137-.248-.211-.366a6.843 6.843 0 0 0-.248-.34c-.093-.106-.186-.212-.285-.317a3.878 3.878 0 0 0-.161-.155c-.28-.217-.57-.421-.862-.607a1.154 1.154 0 0 0-.124-.062 2.415 2.415 0 0 0-.589-.26Z"/></svg>NestJS</span><span class="tech" style="--tc:#4169E1;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5594 14.7228a.5269.5269 0 0 0-.0563-.1191c-.139-.2632-.4768-.3418-1.0074-.2321-1.6533.3411-2.2935.1312-2.5256-.0191 1.342-2.0482 2.445-4.522 3.0411-6.8297.2714-1.0507.7982-3.5237.1222-4.7316a1.5641 1.5641 0 0 0-.1509-.235C21.6931.9086 19.8007.0248 17.5099.0005c-1.4947-.0158-2.7705.3461-3.1161.4794a9.449 9.449 0 0 0-.5159-.0816 8.044 8.044 0 0 0-1.3114-.1278c-1.1822-.0184-2.2038.2642-3.0498.8406-.8573-.3211-4.7888-1.645-7.2219.0788C.9359 2.1526.3086 3.8733.4302 6.3043c.0409.818.5069 3.334 1.2423 5.7436.4598 1.5065.9387 2.7019 1.4334 3.582.553.9942 1.1259 1.5933 1.7143 1.7895.4474.1491 1.1327.1441 1.8581-.7279.8012-.9635 1.5903-1.8258 1.9446-2.2069.4351.2355.9064.3625 1.39.3772a.0569.0569 0 0 0 .0004.0041 11.0312 11.0312 0 0 0-.2472.3054c-.3389.4302-.4094.5197-1.5002.7443-.3102.064-1.1344.2339-1.1464.8115-.0025.1224.0329.2309.0919.3268.2269.4231.9216.6097 1.015.6331 1.3345.3335 2.5044.092 3.3714-.6787-.017 2.231.0775 4.4174.3454 5.0874.2212.5529.7618 1.9045 2.4692 1.9043.2505 0 .5263-.0291.8296-.0941 1.7819-.3821 2.5557-1.1696 2.855-2.9059.1503-.8707.4016-2.8753.5388-4.1012.0169-.0703.0357-.1207.057-.1362.0007-.0005.0697-.0471.4272.0307a.3673.3673 0 0 0 .0443.0068l.2539.0223.0149.001c.8468.0384 1.9114-.1426 2.5312-.4308.6438-.2988 1.8057-1.0323 1.5951-1.6698zM2.371 11.8765c-.7435-2.4358-1.1779-4.8851-1.2123-5.5719-.1086-2.1714.4171-3.6829 1.5623-4.4927 1.8367-1.2986 4.8398-.5408 6.108-.13-.0032.0032-.0066.0061-.0098.0094-2.0238 2.044-1.9758 5.536-1.9708 5.7495-.0002.0823.0066.1989.0162.3593.0348.5873.0996 1.6804-.0735 2.9184-.1609 1.1504.1937 2.2764.9728 3.0892.0806.0841.1648.1631.2518.2374-.3468.3714-1.1004 1.1926-1.9025 2.1576-.5677.6825-.9597.5517-1.0886.5087-.3919-.1307-.813-.5871-1.2381-1.3223-.4796-.839-.9635-2.0317-1.4155-3.5126zm6.0072 5.0871c-.1711-.0428-.3271-.1132-.4322-.1772.0889-.0394.2374-.0902.4833-.1409 1.2833-.2641 1.4815-.4506 1.9143-1.0002.0992-.126.2116-.2687.3673-.4426a.3549.3549 0 0 0 .0737-.1298c.1708-.1513.2724-.1099.4369-.0417.156.0646.3078.26.3695.4752.0291.1016.0619.2945-.0452.4444-.9043 1.2658-2.2216 1.2494-3.1676 1.0128zm2.094-3.988-.0525.141c-.133.3566-.2567.6881-.3334 1.003-.6674-.0021-1.3168-.2872-1.8105-.8024-.6279-.6551-.9131-1.5664-.7825-2.5004.1828-1.3079.1153-2.4468.079-3.0586-.005-.0857-.0095-.1607-.0122-.2199.2957-.2621 1.6659-.9962 2.6429-.7724.4459.1022.7176.4057.8305.928.5846 2.7038.0774 3.8307-.3302 4.7363-.084.1866-.1633.3629-.2311.5454zm7.3637 4.5725c-.0169.1768-.0358.376-.0618.5959l-.146.4383a.3547.3547 0 0 0-.0182.1077c-.0059.4747-.054.6489-.115.8693-.0634.2292-.1353.4891-.1794 1.0575-.11 1.4143-.8782 2.2267-2.4172 2.5565-1.5155.3251-1.7843-.4968-2.0212-1.2217a6.5824 6.5824 0 0 0-.0769-.2266c-.2154-.5858-.1911-1.4119-.1574-2.5551.0165-.5612-.0249-1.9013-.3302-2.6462.0044-.2932.0106-.5909.019-.8918a.3529.3529 0 0 0-.0153-.1126 1.4927 1.4927 0 0 0-.0439-.208c-.1226-.4283-.4213-.7866-.7797-.9351-.1424-.059-.4038-.1672-.7178-.0869.067-.276.1831-.5875.309-.9249l.0529-.142c.0595-.16.134-.3257.213-.5012.4265-.9476 1.0106-2.2453.3766-5.1772-.2374-1.0981-1.0304-1.6343-2.2324-1.5098-.7207.0746-1.3799.3654-1.7088.5321a5.6716 5.6716 0 0 0-.1958.1041c.0918-1.1064.4386-3.1741 1.7357-4.4823a4.0306 4.0306 0 0 1 .3033-.276.3532.3532 0 0 0 .1447-.0644c.7524-.5706 1.6945-.8506 2.802-.8325.4091.0067.8017.0339 1.1742.081 1.939.3544 3.2439 1.4468 4.0359 2.3827.8143.9623 1.2552 1.9315 1.4312 2.4543-1.3232-.1346-2.2234.1268-2.6797.779-.9926 1.4189.543 4.1729 1.2811 5.4964.1353.2426.2522.4522.2889.5413.2403.5825.5515.9713.7787 1.2552.0696.087.1372.1714.1885.245-.4008.1155-1.1208.3825-1.0552 1.717-.0123.1563-.0423.4469-.0834.8148-.0461.2077-.0702.4603-.0994.7662zm.8905-1.6211c-.0405-.8316.2691-.9185.5967-1.0105a2.8566 2.8566 0 0 0 .135-.0406 1.202 1.202 0 0 0 .1342.103c.5703.3765 1.5823.4213 3.0068.1344-.2016.1769-.5189.3994-.9533.6011-.4098.1903-1.0957.333-1.7473.3636-.7197.0336-1.0859-.0807-1.1721-.151zm.5695-9.2712c-.0059.3508-.0542.6692-.1054 1.0017-.055.3576-.112.7274-.1264 1.1762-.0142.4368.0404.8909.0932 1.3301.1066.887.216 1.8003-.2075 2.7014a3.5272 3.5272 0 0 1-.1876-.3856c-.0527-.1276-.1669-.3326-.3251-.6162-.6156-1.1041-2.0574-3.6896-1.3193-4.7446.3795-.5427 1.3408-.5661 2.1781-.463zm.2284 7.0137a12.3762 12.3762 0 0 0-.0853-.1074l-.0355-.0444c.7262-1.1995.5842-2.3862.4578-3.4385-.0519-.4318-.1009-.8396-.0885-1.2226.0129-.4061.0666-.7543.1185-1.0911.0639-.415.1288-.8443.1109-1.3505.0134-.0531.0188-.1158.0118-.1902-.0457-.4855-.5999-1.938-1.7294-3.253-.6076-.7073-1.4896-1.4972-2.6889-2.0395.5251-.1066 1.2328-.2035 2.0244-.1859 2.0515.0456 3.6746.8135 4.8242 2.2824a.908.908 0 0 1 .0667.1002c.7231 1.3556-.2762 6.2751-2.9867 10.5405zm-8.8166-6.1162c-.025.1794-.3089.4225-.6211.4225a.5821.5821 0 0 1-.0809-.0056c-.1873-.026-.3765-.144-.5059-.3156-.0458-.0605-.1203-.178-.1055-.2844.0055-.0401.0261-.0985.0925-.1488.1182-.0894.3518-.1226.6096-.0867.3163.0441.6426.1938.6113.4186zm7.9305-.4114c.0111.0792-.049.201-.1531.3102-.0683.0717-.212.1961-.4079.2232a.5456.5456 0 0 1-.075.0052c-.2935 0-.5414-.2344-.5607-.3717-.024-.1765.2641-.3106.5611-.352.297-.0414.6111.0088.6356.1851z"/></svg>PostgreSQL</span><span class="tech" style="--tc:#FF4438;--k:4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.71 13.145c-1.66 2.092-3.452 4.483-7.038 4.483-3.203 0-4.397-2.825-4.48-5.12.701 1.484 2.073 2.685 4.214 2.63 4.117-.133 6.94-3.852 6.94-7.239 0-4.05-3.022-6.972-8.268-6.972-3.752 0-8.4 1.428-11.455 3.685C2.59 6.937 3.885 9.958 4.35 9.626c2.648-1.904 4.748-3.13 6.784-3.744C8.12 9.244.886 17.05 0 18.425c.1 1.261 1.66 4.648 2.424 4.648.232 0 .431-.133.664-.365a100.49 100.49 0 0 0 5.54-6.765c.222 3.104 1.748 6.898 6.014 6.898 3.819 0 7.604-2.756 9.33-8.965.2-.764-.73-1.361-1.261-.73zm-4.349-5.013c0 1.959-1.926 2.922-3.685 2.922-.941 0-1.664-.247-2.235-.568 1.051-1.592 2.092-3.225 3.21-4.973 1.972.334 2.71 1.43 2.71 2.619z"/></svg>Redis</span><span class="tech" style="--tc:#569A31;--k:5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.913 13.147l.12-.895c.947.576 1.258.922 1.354 1.071-.16.031-.562.046-1.474-.176zm-2.174 7.988a.547.547 0 0 0-.005.073c0 .084-.207.405-1.124.768a10.28 10.28 0 0 1-1.438.432c-1.405.325-3.128.504-4.853.504-4.612 0-7.412-1.184-7.412-1.704a.547.547 0 0 0-.005-.073L1.81 5.602c.135.078.28.154.432.227.042.02.086.038.128.057.134.062.272.122.417.18l.179.069c.154.058.314.114.478.168.043.013.084.029.13.043.207.065.423.127.646.187l.176.044c.175.044.353.087.534.127a23.414 23.414 0 0 0 .843.17l.121.023c.252.045.508.085.768.122.071.011.144.02.216.03.2.027.4.053.604.077l.24.027c.245.026.49.05.74.07l.081.009c.275.022.552.04.83.056l.233.012c.21.01.422.018.633.025a33.088 33.088 0 0 0 2.795-.026l.232-.011c.278-.016.555-.034.83-.056l.08-.008c.25-.02.497-.045.742-.072l.238-.026c.205-.024.408-.05.609-.077.07-.01.141-.019.211-.03.261-.037.519-.078.772-.122l.111-.02c.215-.04.427-.082.634-.125l.212-.047c.186-.041.368-.085.546-.13l.166-.042c.225-.06.444-.122.654-.189.04-.012.077-.026.115-.038a10.6 10.6 0 0 0 .493-.173c.058-.021.114-.044.17-.066.15-.06.293-.12.43-.185.038-.017.079-.034.116-.052.153-.073.3-.15.436-.228l-.976 7.245c-2.488-.78-5.805-2.292-7.311-3a1.09 1.09 0 0 0-1.088-1.085c-.6 0-1.088.489-1.088 1.088 0 .6.488 1.089 1.088 1.089.196 0 .378-.056.537-.148 1.72.812 5.144 2.367 7.715 3.15zm-7.42-20.047c5.677 0 9.676 1.759 9.75 2.736l-.014.113c-.01.033-.031.067-.048.101-.015.028-.026.057-.047.087-.024.033-.058.068-.09.102-.028.03-.051.06-.084.09-.038.035-.087.07-.133.105-.04.03-.074.06-.119.091-.053.036-.116.071-.177.107-.05.03-.095.06-.15.09-.068.036-.147.073-.222.11-.059.028-.114.057-.177.085-.084.038-.177.074-.268.111-.068.027-.13.054-.203.082-.097.036-.205.072-.31.107-.075.026-.148.053-.228.079-.111.035-.233.069-.35.103-.085.024-.165.05-.253.073-.124.034-.258.065-.389.098-.093.022-.181.046-.278.068-.139.032-.287.061-.433.091-.098.02-.191.041-.293.06-.155.03-.32.057-.482.084-.1.018-.198.036-.302.052-.166.026-.342.048-.515.072-.11.014-.213.03-.325.044-.181.023-.372.041-.56.06-.11.012-.218.025-.332.036-.188.016-.386.029-.58.043-.122.009-.24.02-.364.028-.207.012-.422.02-.635.028-.12.005-.234.012-.354.016a35.605 35.605 0 0 1-2.069 0c-.12-.004-.234-.011-.352-.016-.214-.008-.43-.016-.637-.028-.122-.008-.238-.02-.36-.027-.195-.015-.394-.028-.584-.044-.11-.01-.215-.024-.324-.035-.19-.02-.384-.038-.568-.06l-.315-.044c-.176-.024-.355-.046-.525-.073-.1-.015-.192-.033-.29-.05-.167-.028-.335-.055-.494-.086-.096-.018-.183-.038-.276-.056-.151-.032-.305-.062-.45-.095-.09-.02-.173-.043-.26-.064-.138-.034-.277-.067-.407-.102-.082-.022-.157-.046-.235-.069a11.75 11.75 0 0 1-.368-.108c-.075-.024-.141-.049-.213-.073-.11-.037-.223-.075-.325-.113-.067-.025-.125-.051-.188-.077-.096-.038-.195-.076-.282-.115-.06-.027-.11-.054-.166-.08-.08-.039-.162-.077-.233-.116-.052-.028-.094-.055-.142-.084-.063-.038-.13-.075-.185-.113-.043-.029-.075-.058-.113-.086-.048-.037-.098-.073-.139-.11-.032-.029-.054-.057-.08-.087-.033-.035-.069-.07-.093-.104-.02-.03-.031-.058-.046-.086-.018-.035-.039-.068-.049-.102l-.015-.113c.076-.977 4.074-2.736 9.748-2.736zm12.182 12.124c-.118-.628-.84-1.291-2.31-2.128l.963-7.16a.531.531 0 0 0 .005-.073C22.16 1.581 16.447 0 11.32 0 6.194 0 .482 1.581.482 3.851a.58.58 0 0 0 .005.072L2.819 21.25c.071 2.002 5.236 2.75 8.5 2.75 1.805 0 3.615-.188 5.098-.531.598-.138 1.133-.3 1.592-.48 1.18-.467 1.789-1.053 1.813-1.739l.945-7.018c.557.131 1.016.197 1.389.197.54 0 .902-.137 1.134-.413a.956.956 0 0 0 .21-.804Z"/></svg>Amazon S3</span><span class="tech" style="--tc:#2496ED;--k:6"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></svg>Docker</span></div>
         <div class="pbtns">
-          <a class="btn live" href="https://github.com/gusbusx/CloudDrop" target="_blank" rel="noopener">Visit The Code ↗</a>
+          <a class="btn live" href="https://gusbusx.github.io/CloudDrop/" target="_blank" rel="noopener">Visit live site ↗</a>
           <button class="btn more" data-proj="2">More details</button>
         </div>
       </div>
@@ -441,10 +943,11 @@
         <div class="role">Mobile Developer · Fiserv × Rutgers Newark Hackathon</div>
         <p>A location-aware digital wellness platform built with a 3-person team that took 1st place. Analyzes dwell time
           and movement behavior to generate personalized recommendations, built on scalable routing and reusable service layers.</p>
-        <div class="stack"><span>Flutter</span><span>Dart</span><span>Android</span><span>iOS</span></div>
+        <div class="stack"><span class="tech" style="--tc:#02569B;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z"/></svg>Flutter</span><span class="tech" style="--tc:#0175C2;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.105 4.105S9.158 1.58 11.684.316a3.079 3.079 0 0 1 1.481-.315c.766.047 1.677.788 1.677.788L24 9.948v9.789h-4.263V24H9.789l-9-9C.303 14.5 0 13.795 0 13.105c0-.319.18-.818.316-1.105l3.789-7.895zm.679.679v11.787c.002.543.021 1.024.498 1.508L10.204 23h8.533v-4.263L4.784 4.784zm12.055-.678c-.899-.896-1.809-1.78-2.74-2.643-.302-.267-.567-.468-1.07-.462-.37.014-.87.195-.87.195L6.341 4.105l10.498.001z"/></svg>Dart</span><span class="tech" style="--tc:#34A853;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></svg>Android</span><span class="tech" style="--tc:#e8ecf4;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>iOS</span></div>
         <div class="pbtns">
-          <a class="btn live" href="https://github.com/gusbusx/root" target="_blank" rel="noopener">Visit The Code ↗</a>
+          <a class="btn live" href="https://gusbusx.github.io/root/" target="_blank" rel="noopener">Visit live site ↗</a>
           <button class="btn more" data-proj="3">More details</button>
+          <button class="btn more deck-open" data-pv="deck">▶ Presentation</button>
         </div>
       </div>
     </div></div>
@@ -457,7 +960,7 @@
         <p>Designed and built the full website for Marler Enterprises, a bookkeeping and administrative services firm in
           Roselle, NJ. A hand-coded, scroll-driven site in the company's gold-and-green brand, with a working contact form,
           live at marlerenterprises.com.</p>
-        <div class="stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Canvas</span><span>Cloudflare Pages</span></div>
+        <div class="stack"><span class="tech" style="--tc:#E34F26;--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>HTML5</span><span class="tech" style="--tc:#1572B6;--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS</span><span class="tech" style="--tc:#F7DF1E;--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg>JavaScript</span><span class="tech" style="--tc:#FF5DA2;--k:3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM5 5v14h14V5zm2 10.5 3-4 2.2 2.8L15 10l3 5.5z"/></svg>Canvas</span><span class="tech" style="--tc:#F38020;--k:4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.715 14.32H5.442l-.64-1.203L13.673 0l1.397.579-1.752 9.112h5.24l.648 1.192L10.719 24l-1.412-.54ZM4.091 5.448a.5787.5787 0 1 1 0-1.1574.5787.5787 0 0 1 0 1.1574zm1.543 0a.5787.5787 0 1 1 0-1.1574.5787.5787 0 0 1 0 1.1574zm1.544 0a.5787.5787 0 1 1 0-1.1574.5787.5787 0 0 1 0 1.1574zm8.657-2.7h5.424l.772.771v16.975l-.772.772h-7.392l.374-.579h6.779l.432-.432V3.758l-.432-.432h-4.676l-.552 2.85h-.59l.529-2.877.108-.552ZM2.74 21.265l-.772-.772V3.518l.772-.771h7.677l-.386.579H2.98l-.432.432v16.496l.432.432h5.586l-.092.579zm1.157-1.93h3.28l-.116.58h-3.55l-.192-.193v-3.473l.578 1.158zm13.117 0 .579.58H14.7l.385-.58z"/></svg>Cloudflare Pages</span></div>
         <div class="pbtns">
           <a class="btn live" href="https://marlerenterprises.com/" target="_blank" rel="noopener">Visit live site ↗</a>
           <button class="btn more" data-proj="4">More details</button>
@@ -477,6 +980,7 @@
       <button class="pd-close" id="pdClose" aria-label="Close">✕</button>
       <div class="pd-scroll">
         <div class="pd-text">
+          <div id="pdBrowser"></div>
           <div class="pd-eyebrow" id="pdEyebrow">Project</div>
           <h2 class="pd-title" id="pdTitle">Title</h2>
           <div class="pd-role" id="pdRole">Role</div>
@@ -498,19 +1002,137 @@
   <div class="lb-count" id="lbCount"></div>
 </div>
 
+<!-- HOVER PREVIEW (filled by script) -->
+<div id="hp" class="hp" aria-hidden="true"></div>
+
+<!-- CERTIFICATIONS PAGE -->
+<div id="certPage" class="pg cert-modal" aria-hidden="true" role="dialog" aria-label="Certifications">
+  <div class="pg-bar">
+    <div class="pg-tag"><svg class="cm-seal" style="width:26px;height:26px" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="19" r="14" pathLength="1"/><path pathLength="1" d="M17.5 19.5l4.5 4.5 8.5-9"/>
+      <path pathLength="1" d="M16 30l-4 14 6-3 4 5 3-10"/><path pathLength="1" d="M32 30l4 14-6-3-4 5-3-10"/></svg>Certifications &amp; honors</div>
+    <div class="pg-acts">
+      <a class="btn li-btn" href="https://www.linkedin.com/in/gusbuses/details/certifications/" target="_blank" rel="noopener" data-pv="linkedin">LinkedIn ↗</a>
+      <button class="pg-x" data-close aria-label="Close">✕</button>
+    </div>
+  </div>
+  <div class="pg-in">
+    <h2 class="pg-title"><span class="line"><span>Always <span class="gold-t">learning.</span></span></span></h2>
+    <p class="pg-sub">Certificates I’ve earned and honors I’ve received. Click any certificate to see it full size.</p>
+    <div class="cf" id="certFilter"></div>
+    <div class="cm-grid" id="cmGrid"></div>
+  </div>
+</div>
+
+<!-- RESUME PAGE -->
+<div id="cvPage" class="pg" aria-hidden="true" role="dialog" aria-label="Resume">
+  <div class="pg-bar">
+    <div class="pg-tag">Resume</div>
+    <div class="pg-acts">
+      <a class="btn more" href="./img/resume/Augusto_Segura_Resume.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
+      <a class="btn live" href="./img/resume/Augusto_Segura_Resume.pdf" download>Download</a>
+      <button class="pg-x" data-close aria-label="Close">✕</button>
+    </div>
+  </div>
+  <div class="pg-in">
+    <h2 class="pg-title"><span class="line"><span>Resume.</span></span></h2>
+    <p class="pg-sub">Founder &amp; CEO of Gusify · Computer Science at Rutgers University–New Brunswick, Class of 2027.</p>
+    <div class="cv-pages">
+      <img src="./img/resume/page1.jpg" alt="Resume page 1" style="--i:0">
+      <img src="./img/resume/page2.jpg" alt="Resume page 2" style="--i:1">
+    </div>
+  </div>
+</div>
+
+<!-- ROOT PRESENTATION PAGE -->
+<div id="deckPage" class="pg" aria-hidden="true" role="dialog" aria-label="Root presentation">
+  <div class="pg-bar">
+    <div class="pg-tag" style="color:#6ee7b7">Root · Pitch deck</div>
+    <div class="pg-acts">
+      <a class="btn more" href="./img/rootpics/Root_Wellness_App.pdf" target="_blank" rel="noopener">PDF ↗</a>
+      <a class="btn live" href="./img/rootpics/Root_Wellness_App.pptx" download>Download .pptx</a>
+      <button class="pg-x" data-close aria-label="Close">✕</button>
+    </div>
+  </div>
+  <div class="pg-in">
+    <h2 class="pg-title"><span class="line"><span>Root<span style="color:#6ee7b7">.</span></span></span></h2>
+    <p class="pg-sub">The deck we presented to Fiserv judges at the Fiserv × Rutgers Newark Hackathon, where Root took 1st place.
+      It plays on its own. Use the arrows or your keyboard to flip through.</p>
+    <div class="dk-stage" id="dkStage">
+      <button class="dk-nav dk-prev" id="dkPrev" aria-label="Previous slide">‹</button>
+      <button class="dk-nav dk-next" id="dkNext" aria-label="Next slide">›</button>
+      <div class="dk-prog" id="dkProg"></div>
+    </div>
+    <div class="dk-meta"><span id="dkCount">1 / 10</span><button class="dk-play" id="dkPlay">❚❚ Pause</button></div>
+    <div class="dk-thumbs" id="dkThumbs"></div>
+  </div>
+</div>
+
+<!-- EMAIL: Gmail-style inbox -->
+<div id="mailPage" class="pg gm-pg" aria-hidden="true" role="dialog" aria-label="Email Augusto">
+  <div class="gm pg-in">
+    <header class="gm-top">
+      <button class="gm-ib" aria-label="Menu"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+      <div class="gm-brand"><img src="./img/gmail.jpg" alt=""><b>Inbox</b></div>
+      <label class="gm-search"><span class="gm-ib" style="width:40px;height:40px"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><input id="gmQ" type="search" placeholder="Search mail"></label>
+      <div class="gm-tr">
+        <img class="gm-av" src="./img/profilepic.png" alt="Augusto" title="augustoesegura@gmail.com">
+        <button class="gm-ib" data-close aria-label="Close inbox" title="Close"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      </div>
+    </header>
+    <aside class="gm-side">
+      <button class="gm-compose-btn" data-compose><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> Compose</button>
+      <button class="gm-nav on" data-box="inbox"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 12h-4a3 3 0 0 1-6 0H5V5h14v10z"/></svg> Inbox <em id="gmUnread"></em></button>
+      <button class="gm-nav" data-box="starred"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg> Starred</button>
+      <button class="gm-nav" data-box="sent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg> Sent</button>
+    </aside>
+    <main class="gm-main">
+      <div class="gm-tool"><span class="ck" style="width:18px;height:18px;border:2px solid #5f6368;border-radius:3px;opacity:.6;margin:0 11px"></span>
+        <button class="gm-ib" id="gmRefresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button><span id="gmCount"></span></div>
+      <div class="gm-tabs" id="gmTabs">
+        <button class="gm-tab on" data-cat="primary" style="--gc:#0b57d0"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 12h-4a3 3 0 0 1-6 0H5V5h14v10z"/></svg> Primary <b></b></button>
+        <button class="gm-tab" data-cat="projects" style="--gc:#188038"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-6 0h-4V4h4v2z"/></svg> Projects <b></b></button>
+        <button class="gm-tab" data-cat="updates" style="--gc:#e37400"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg> Updates <b></b></button>
+      </div>
+      <div class="gm-list" id="gmList"></div>
+      <div class="gm-read" id="gmRead"></div>
+    </main>
+  </div>
+
+  <div class="gm-cmp" id="gmCmp" role="dialog" aria-label="New message">
+    <div class="gm-cmp-h" id="gmCmpH"><span>New message</span><button id="gmMin" aria-label="Minimize">–</button><button id="gmCmpX" aria-label="Close">✕</button></div>
+    <div class="gm-f"><label>To</label><span class="gm-chip"><img src="./img/profilepic.png" alt="">Augusto Segura &lt;augustoesegura@gmail.com&gt;</span></div>
+    <div class="gm-f"><label>From</label><input id="gmName" type="text" placeholder="Your name" autocomplete="name"></div>
+    <div class="gm-f"><label style="visibility:hidden">From</label><input id="gmEmail" type="email" placeholder="Your email" autocomplete="email"></div>
+    <div class="gm-f"><input id="gmSubj" type="text" placeholder="Subject"></div>
+    <textarea id="gmMsg" placeholder="Write your message…"></textarea>
+    <div class="gm-err" id="gmErr"></div>
+    <div class="gm-cmp-f"><button class="gm-send" id="gmSend">Send</button>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=augustoesegura@gmail.com" target="_blank" rel="noopener">Open in Gmail instead ↗</a></div>
+  </div>
+  <button class="gm-fab" data-compose><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> Compose</button>
+  <div class="gm-toast" id="gmToast"><span>Message sent.</span><button id="gmToastView">View message</button></div>
+</div>
+
 <section class="phase" id="work">
   <div class="wrap"><div class="glass reveal">
     <div class="eyebrow" style="color:var(--amber)">Experience</div>
     <h2 style="margin-bottom:26px">Where I've worked.</h2>
     <div class="tabs" id="wtabs">
-      <div class="tab on a" data-p="w0"><span class="ico" style="background:var(--amber)">★</span> Hackathon</div>
+      <div class="tab on gd" data-p="w6"><span class="ico ico-img ico-dark"><img src="./img/gusify-logo.svg" alt=""></span> Gusify</div>
+      <div class="tab a" data-p="w0"><span class="ico" style="background:var(--amber)">★</span> Hackathon</div>
       <div class="tab b" data-p="w1"><span class="ico ico-img"><img src="./img/eps-logo.jpg" alt=""></span> EPS</div>
       <div class="tab c" data-p="w2"><span class="ico ico-img"><img src="./img/2kd-logo.png" alt=""></span> 2KD</div>
       <div class="tab v" data-p="w3"><span class="ico ico-img"><img src="./img/marler-logo.png" alt=""></span> Marler</div>
       <div class="tab b" data-p="w4"><span class="ico ico-img"><img src="./img/amazon-logo.jpg" alt=""></span> Amazon</div>
       <div class="tab p" data-p="w5"><span class="ico ico-img"><img src="./img/jerseymikes-logo.jpeg" alt=""></span> Jersey Mike's</div>
     </div>
-    <div class="panel show" id="w0"><div class="witem"><div class="date">Apr 2026 <div class="wlogo"><img src="./img/root-logo.jpg" alt=""></div> <button class="btn more wbtn" data-proj="3">More details</button> </div><div><h4>Fiserv × Rutgers Newark Hackathon</h4><div class="r" style="color:var(--amber)">Winner — Mobile Developer</div><p>-Worked with a 3-person team to win 1st place by creating a location-aware wellness platform that analyzed dwell time and movement behavior to generate personalized recommendations. 
+    <div class="panel show" id="w6"><div class="witem"><div class="date">2026 — Present<div class="wlogo wlogo-dark"><img src="./img/gusify-logo.svg" alt=""></div> <button class="btn more wbtn" data-proj="5">More details</button> </div><div><h4>Gusify</h4><div class="r" style="color:var(--gold2)">Founder &amp; CEO</div><p>-Founded Gusify, an independent web design and development studio building custom, hand-coded websites for small businesses
+<br><br/>-Run the business end to end: client discovery, proposals and pricing, design, development, launch, hosting and ongoing support
+<br><br/>-Delivered live client websites for Marler Enterprises and 2KD Hood Cleaning, with more projects in production
+<br><br/>-Built the studio's own site (gusify.net) with Next.js, React and TypeScript on Cloudflare Workers, including a plan builder with live pricing and an inquiry pipeline with email delivery</p></div></div></div>
+
+    <div class="panel" id="w0"><div class="witem"><div class="date">Apr 2026 <div class="wlogo"><img src="./img/root-logo.jpg" alt=""></div> <button class="btn more wbtn" data-proj="3">More details</button> <button class="btn more wbtn deck-open" data-pv="deck">▶ Presentation</button> </div><div><h4>Fiserv × Rutgers Newark Hackathon</h4><div class="r" style="color:var(--amber)">Winner — Mobile Developer</div><p>-Worked with a 3-person team to win 1st place by creating a location-aware wellness platform that analyzed dwell time and movement behavior to generate personalized recommendations. 
 <br><br/>-Architected the application using scalable routing and reusable service layers to accelerate feature integration during the competition. 
 <br><br/>-Delivered a fully functional Android/iOS MVP and presented the system design and product vision to Fiserv industry judges.</p></div></div></div>
 
@@ -543,16 +1165,31 @@
     <h2 style="margin-bottom:26px">Contact</h2>
     <div class="grid">
       <div>
-        <div class="field"><label>Name</label><input id="cName" type="text" placeholder="Your name"></div>
-        <div class="field"><label>Subject</label><input id="cSubj" type="text" placeholder="Subject"></div>
-        <div class="field"><label>Email</label><input id="cEmail" type="email" placeholder="Your email"></div>
-        <div class="field"><label>Message</label><textarea id="cMsg" placeholder="Your message"></textarea></div>
-        <button class="sendbtn" id="sendBtn">send</button>
+        <form id="cForm" novalidate>
+        <div class="frow">
+          <div class="field" data-f="name"><label for="cName">Name <i>*</i></label><input id="cName" type="text" placeholder="Your name" autocomplete="name" maxlength="100" required><small class="ferr"></small></div>
+          <div class="field" data-f="email"><label for="cEmail">Email <i>*</i></label><input id="cEmail" type="email" placeholder="you@example.com" autocomplete="email" maxlength="200" required><small class="ferr"></small></div>
+        </div>
+        <div class="frow">
+          <div class="field" data-f="phone"><label for="cPhone">Phone <em>optional</em></label>
+            <div class="phone">
+              <label class="phone-cc"><span class="phone-face"><span class="phone-flag" id="cFlag">🇺🇸</span><span id="cDial">+1</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                <select id="cCountry" aria-label="Country code"><option value="US">🇺🇸 United States (+1)</option></select></label>
+              <input id="cPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(908) 555-0101">
+            </div><small class="ferr"></small></div>
+          <div class="field" data-f="subject"><label for="cSubj">Subject <em>optional</em></label><input id="cSubj" type="text" placeholder="What's this about?" maxlength="150"><small class="ferr"></small></div>
+        </div>
+        <div class="field" data-f="message"><label for="cMsg">Message <i>*</i></label><textarea id="cMsg" placeholder="Your message" maxlength="5000" required></textarea><small class="ferr"></small></div>
+        <input type="text" id="cWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <button class="sendbtn" id="sendBtn" type="submit">send</button>
+        <p class="fnote" id="cNote" role="status" aria-live="polite"></p>
+        </form>
       </div>
       <div class="social">
-        <a href="https://www.linkedin.com/in/gusbuses/" target="_blank" rel="noopener"><span class="si si-img"><img src="./img/linkedin.png" alt=""></span><span>LinkedIn<small>in/gusbuses</small></span></a>
-        <a href="mailto:augustoesegura@gmail.com"><span class="si si-img"><img src="./img/gmail.jpg" alt=""></span><span>Email<small>augustoesegura@gmail.com</small></span></a>
-        <a href="https://github.com/gusbusx" target="_blank" rel="noopener"><span class="si si-img"><img src="./img/github.png" alt=""></span><span>GitHub<small>github.com/gusbusx</small></span></a>
+        <a href="https://www.linkedin.com/in/gusbuses/" target="_blank" rel="noopener" data-pv="linkedin"><span class="si si-img"><img src="./img/linkedin.png" alt=""></span><span>LinkedIn<small>in/gusbuses</small></span></a>
+        <a href="mailto:augustoesegura@gmail.com" id="mailLink" data-pv="mail"><span class="si si-img"><img src="./img/gmail.jpg" alt=""></span><span>Email<small>augustoesegura@gmail.com</small></span></a>
+        <a href="https://github.com/gusbusx" target="_blank" rel="noopener" data-pv="github"><span class="si si-img"><img src="./img/github.png" alt=""></span><span>GitHub<small>github.com/gusbusx</small></span></a>
       </div>
     </div>
   </div></div>
@@ -560,6 +1197,7 @@
 </div>
 <footer>Made with <span class="h">❤</span> by Augusto Segura</footer>
 
+<script src="./vendor/libphonenumber.min.js" defer></script>
 <script type="importmap">
 { "imports": {
   "three": "./vendor/three.module.js",
@@ -607,32 +1245,134 @@
       glass.querySelector('#'+tab.dataset.p).classList.add('show');
     }));}
   wireTabs('ptabs');wireTabs('wtabs');
+  // wrap section headlines in a mask so they rise in (Gusify-style)
+  document.querySelectorAll('.phase .glass > h2').forEach(h=>{
+    h.innerHTML='<span class="line"><span>'+h.innerHTML+'</span></span>';
+  });
   const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.2});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   const links=[...document.querySelectorAll('nav a')];
   const navIo=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id));}})},{threshold:.5});
   document.querySelectorAll('.phase').forEach(s=>navIo.observe(s));
-  document.getElementById('sendBtn').addEventListener('click',async()=>{
-    const btn=document.getElementById('sendBtn');
-    const n=document.getElementById('cName').value.trim(),
-          s=document.getElementById('cSubj').value.trim(),
-          em=document.getElementById('cEmail').value.trim(),
-          m=document.getElementById('cMsg').value.trim();
-    if(!n||!em||!m){ btn.textContent='fill in name, email & message'; setTimeout(()=>btn.textContent='send',1800); return; }
-    btn.textContent='sending…'; btn.disabled=true;
+  /* ===================== CONFETTI ===================== */
+  function confetti(from){
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cv=document.createElement('canvas'); Object.assign(cv.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:200});
+    document.body.appendChild(cv);
+    const dpr=Math.min(2,devicePixelRatio||1), W=innerWidth, H=innerHeight; cv.width=W*dpr; cv.height=H*dpr;
+    const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+    const r=from?from.getBoundingClientRect():{left:W/2,top:H/2,width:0,height:0};
+    const ox=r.left+r.width/2, oy=r.top+r.height/2;
+    const COLORS=['#22d3ee','#ffd76a','#ff5da2','#9b8cff','#34d399','#ffb347','#5fa8ff','#ffffff'];
+    const P=[];
+    const burst=(n,spread,power)=>{ for(let i=0;i<n;i++){ const a=-Math.PI/2+(Math.random()-.5)*spread, v=power*(.55+Math.random()*.6);
+      P.push({x:ox+(Math.random()-.5)*r.width*.6,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,w:6+Math.random()*7,h:4+Math.random()*5,
+        rot:Math.random()*6.3,vr:(Math.random()-.5)*.35,c:COLORS[i%COLORS.length],shape:Math.random()<.25?'c':Math.random()<.5?'s':'r',life:0,tilt:Math.random()*6.3}); } };
+    burst(150,1.8,23); setTimeout(()=>burst(80,2.8,17),170);
+    let last=performance.now();
+    (function tick(now){
+      const dt=Math.min(32,now-last)/16.7; last=now;
+      ctx.clearRect(0,0,W,H); let alive=0;
+      for(const p of P){
+        p.life+=dt; p.vy+=.32*dt; p.vx*=Math.pow(.985,dt); p.vy*=Math.pow(.985,dt);
+        p.x+=p.vx*dt+Math.sin((p.life+p.tilt)*.12)*.6; p.y+=p.vy*dt; p.rot+=p.vr*dt;
+        const fade=Math.max(0,1-Math.max(0,p.life-90)/50); if(p.y>H+40||fade<=0) continue; alive++;
+        ctx.save(); ctx.globalAlpha=fade; ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c;
+        const sx=Math.abs(Math.cos(p.life*.18+p.tilt));
+        if(p.shape==='c'){ ctx.beginPath(); ctx.arc(0,0,p.h*.6,0,6.3); ctx.fill(); }
+        else if(p.shape==='s'){ ctx.fillRect(-p.w/2,-1.5,p.w*1.6*sx+2,3); }
+        else ctx.fillRect(-p.w/2*sx,-p.h/2,p.w*sx+1,p.h);
+        ctx.restore();
+      }
+      alive?requestAnimationFrame(tick):cv.remove();
+    })(last);
+  }
+  window.__confetti=confetti;
+
+  /* ===================== CONTACT (Resend via /api/contact, Formspree as backup) ===================== */
+  async function sendContact(data){
+    const payload={...data, website:document.getElementById('cWebsite')?.value||''};
     try{
-      const res=await fetch('https://formspree.io/f/mrewdlwe',{
-        method:'POST',
-        headers:{'Accept':'application/json'},
-        body:JSON.stringify({name:n, email:em, _subject:s||'New message from portfolio', message:m})
-      });
-      if(res.ok){
-        btn.textContent='sent ✓ thank you!';
-        ['cName','cSubj','cEmail','cMsg'].forEach(id=>document.getElementById(id).value='');
-      }else{ btn.textContent='something went wrong — try again'; }
-    }catch(e){ btn.textContent='network error — try again'; }
-    btn.disabled=false;
-    setTimeout(()=>btn.textContent='send',3000);
+      const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+      if(r.ok) return {ok:true};
+      if(r.status===400){ const j=await r.json().catch(()=>({})); return {ok:false, errors:j.errors||{}}; }
+      // 404/405 = no backend (e.g. Live Server); 5xx = email not set up: fall through to Formspree
+    }catch(e){}
+    try{
+      const r=await fetch('https://formspree.io/f/mrewdlwe',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({name:data.name,email:data.email,phone:data.phone||'',_subject:data.subject||'New message from portfolio',message:data.message,source:data.source})});
+      return {ok:r.ok};
+    }catch(e){ return {ok:false}; }
+  }
+  window.__sendContact=sendContact;
+
+  // phone: every country, US first, formats as you type (same as Gusify)
+  const P={cc:'US'};
+  const cSel=document.getElementById('cCountry'), cPh=document.getElementById('cPhone');
+  const flagOf=cc=>String.fromCodePoint(...[...cc].map(c=>0x1f1a5+c.charCodeAt(0)));
+  function initPhone(){
+    const L=window.LPN; if(!L) return false;
+    const names=('DisplayNames' in Intl)?new Intl.DisplayNames(['en'],{type:'region'}):null;
+    const all=L.getCountries().map(cc=>({cc,name:(names&&names.of(cc))||cc,code:L.getCountryCallingCode(cc)}));
+    all.sort((a,b)=>a.cc==='US'?-1:b.cc==='US'?1:a.name.localeCompare(b.name));
+    cSel.innerHTML=all.map(c=>`<option value="${c.cc}">${flagOf(c.cc)} ${c.name} (+${c.code})</option>`).join('');
+    cSel.value='US'; return true;
+  }
+  function setCountry(cc){
+    P.cc=cc; cSel.value=cc;
+    document.getElementById('cFlag').textContent=flagOf(cc);
+    document.getElementById('cDial').textContent='+'+(window.LPN?window.LPN.getCountryCallingCode(cc):'1');
+    cPh.placeholder=cc==='US'||cc==='CA'?'(908) 555-0101':'Phone number';
+  }
+  function fmtPhone(raw){
+    const L=window.LPN; if(!L) return raw;
+    if(raw.trim().startsWith('+')){
+      const p=L.parsePhoneNumberFromString(raw);
+      if(p&&p.country){ setCountry(p.country); raw=p.nationalNumber; } else return '+'+raw.replace(/\D/g,'').slice(0,15);
+    }
+    let d=raw.replace(/\D/g,'');
+    if(L.getCountryCallingCode(P.cc)==='1') d=d.replace(/^1+/,'');
+    while(d && L.validatePhoneNumberLength(d,P.cc)==='TOO_LONG') d=d.slice(0,-1);
+    return d? new L.AsYouType(P.cc).input(d) : '';
+  }
+  const phoneReady=()=>{ if(initPhone()) setCountry('US'); else setTimeout(phoneReady,300); };
+  phoneReady();
+  cSel.addEventListener('change',()=>{ setCountry(cSel.value); cPh.value=fmtPhone(cPh.value); });
+  cPh.addEventListener('input',()=>{ cPh.value=fmtPhone(cPh.value); fieldErr('phone',''); });
+  function phoneValue(){
+    const v=cPh.value.trim(); if(!v) return {ok:true,val:''};
+    const L=window.LPN; if(!L) return {ok:v.replace(/\D/g,'').length>=7, val:'+'+v.replace(/\D/g,'')};
+    const d=v.replace(/\D/g,'');
+    if(!L.isValidPhoneNumber(d,P.cc)) return {ok:false};
+    return {ok:true, val:L.parsePhoneNumberFromString(d,P.cc).number};
+  }
+
+  const cForm=document.getElementById('cForm'), sendBtn=document.getElementById('sendBtn'), cNote=document.getElementById('cNote');
+  function fieldErr(f,msg){ const el=cForm.querySelector(`[data-f="${f}"]`); if(!el) return; el.classList.toggle('bad',!!msg); el.querySelector('.ferr').textContent=msg||''; }
+  ['name','email','subject','message'].forEach(f=>{ const el=cForm.querySelector(`[data-f="${f}"] input, [data-f="${f}"] textarea`); el&&el.addEventListener('input',()=>fieldErr(f,'')); });
+  cForm.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const name=document.getElementById('cName').value.trim(), email=document.getElementById('cEmail').value.trim(),
+          subject=document.getElementById('cSubj').value.trim(), message=document.getElementById('cMsg').value.trim();
+    const ph=phoneValue(); let bad=false;
+    if(!name){ fieldErr('name','Please add your name.'); bad=true; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ fieldErr('email','Please enter a valid email so I can write back.'); bad=true; }
+    if(!ph.ok){ fieldErr('phone','That number doesn’t look right for this country.'); bad=true; }
+    if(message.length<2){ fieldErr('message','Please write a message.'); bad=true; }
+    if(bad){ cNote.className='fnote err'; cNote.textContent='Please fix the highlighted fields.'; return; }
+    sendBtn.disabled=true; sendBtn.textContent='sending…'; cNote.className='fnote'; cNote.textContent='';
+    const r=await sendContact({name,email,phone:ph.val,subject,message,source:'Contact form'});
+    sendBtn.disabled=false;
+    if(r.ok){
+      sendBtn.textContent='sent ✓'; sendBtn.classList.add('ok'); confetti(sendBtn);
+      cNote.className='fnote ok'; cNote.textContent=`Thanks ${name.split(' ')[0]}! Your message is in my inbox. I'll get back to you soon.`;
+      ['cName','cEmail','cPhone','cSubj','cMsg'].forEach(id=>document.getElementById(id).value='');
+      setTimeout(()=>{ sendBtn.textContent='send'; sendBtn.classList.remove('ok'); },3500);
+    }else{
+      if(r.errors) Object.entries(r.errors).forEach(([k,v])=>fieldErr(k,v));
+      sendBtn.textContent='send'; cNote.className='fnote err';
+      cNote.textContent=r.errors?'Please fix the highlighted fields.':'Something went wrong. Try again, or email augustoesegura@gmail.com.';
+    }
   });
 
   // "hello" draw-on: replay the writing animation periodically (like the boot screen)
@@ -679,6 +1419,7 @@
       OPERATIONS — Beyond the build, I run their digital operations: fielding 20+ client inquiries a week, maintaining the site, and growing their reach across Northern New Jersey.`,
       images:['./img/2kdpics/2kd1.png','./img/2kdpics/2kd2.png','./img/2kdpics/2kd3.png','./img/2kdpics/2kd4.png','./img/2kdpics/2kd5.png','./img/2kdpics/2kd6.png','./img/2kdpics/2kd7.png'],
       links:[{label:'Visit live site ↗', href:'https://2kdhoodcleaning.com/'}],
+      pv:'2kd',
       cam:{ pos:[152, -3, -7], look:[0, 0, 195] }
     },
     { // 1 — Study Weapon
@@ -704,6 +1445,7 @@
       PRODUCT & GROWTH ENGINEERING — The landing page is built for conversion: intent-based category navigation (AI Tools / Study / Converters / Writing), tool cards with social-proof badges ("MOST POPULAR", "#1 TOOL"), live trust metrics (15+ free tools · 0 signups · $0 forever · 100% browser-safe), a one-click copy-and-share widget for organic distribution, and SEO-targeted landing copy. The product monetizes through ad placement instead of gating features — a deliberate call to keep every tool free for the students who need them most. Includes full privacy policy and terms, with a stated no-data-retention policy.`,
       images:['./img/studyweaponpics/sw1.png','./img/studyweaponpics/sw2.png','./img/studyweaponpics/sw3.png','./img/studyweaponpics/sw4.png'],
       links:[{label:'Visit live site ↗', href:'https://studyweapon.vercel.app/'}],
+      pv:'sw',
       cam:{ pos:[152, -3, 0], look:[0, 0, -400] }
     },
     { // 2 — CloudDrop
@@ -729,8 +1471,9 @@
       FRONTEND — React 18 + TypeScript on Vite: an authenticated file-explorer dashboard with folder navigation, upload (including the chunked-resume client), presigned-URL downloads, rename/move/delete, a share modal for managing permissions, and search — with auth state managed through React Context.
 
       Downloads are served via presigned S3 URLs so file bytes never round-trip through the API server — the client pulls directly from object storage.`,
-      images:['./img/temp7.jpg','./img/temp8.jpg'],
-      links:[{label:'Visit The Code ↗', href:'https://github.com/gusbusx/CloudDrop'}],
+      images:['./img/cloudpics/cd1.jpg','./img/cloudpics/cd2.jpg','./img/cloudpics/cd3.jpg','./img/cloudpics/cd4.jpg','./img/cloudpics/cd5.jpg','./img/cloudpics/cd6.jpg'],
+      links:[{label:'Visit live site ↗', href:'https://gusbusx.github.io/CloudDrop/'}],
+      pv:'cloud',
       cam:{ pos:[119, -3, 6], look:[0, -4, -285] }
     },
     { // 3 — Root (Hackathon) 
@@ -750,8 +1493,10 @@
       ARCHITECTURE — I architected the app with a clean feature-first structure (presentation / services / theme / core / widgets) using reusable service layers and a shared widget library — a deliberate choice so the three of us could integrate features in parallel without collisions under hackathon time pressure. Responsive layout via Sizer so it scales cleanly across phone, tablet, and web. Local persistence with SharedPreferences, network layer on Dio with connectivity awareness, cached network images, custom theming with light/dark support, and a full set of shared UI primitives (loading skeletons, empty states, error boundaries, status badges).
 
       OUTCOME — Delivered a fully functional Android/iOS MVP within the hackathon window and presented the system design and product vision to Fiserv industry judges, taking 1st place.`,
-      images:['./img/temp9.jpg','./img/temp10.jpg'],
-      links:[{label:'Visit The Code ↗', href:`https://github.com/gusbusx/root`}],
+      images:['./img/rootpics/slide01.jpg','./img/rootpics/slide02.jpg','./img/rootpics/slide03.jpg','./img/rootpics/slide04.jpg','./img/rootpics/slide05.jpg',
+              './img/rootpics/slide06.jpg','./img/rootpics/slide07.jpg','./img/rootpics/slide08.jpg','./img/rootpics/slide09.jpg','./img/rootpics/slide10.jpg'],
+      links:[{label:'Visit live site ↗', href:'https://gusbusx.github.io/root/'},{label:'▶ View presentation', action:'deck'}],
+      pv:'root',
       cam:{ pos:[72, -3, 0], look:[0, 0, 44] }
     },
     { // 4 — Marler Enterprises
@@ -777,7 +1522,32 @@
       RESPONSIVE & ACCESSIBLE — Breakpoints from 1000px down to 420px, and every motion effect respects prefers-reduced-motion. Images are embedded so the page loads as one self-contained file.`,
       images:['./img/marlerpics/marler1.jpg','./img/marlerpics/marler2.jpg','./img/marlerpics/marler3.jpg','./img/marlerpics/marler4.jpg','./img/marlerpics/marler5.jpg','./img/marlerpics/marler6.jpg'],
       links:[{label:'Visit live site ↗', href:'https://marlerenterprises.com/'}],
+      pv:'marler',
       cam:{ pos:[164, 0, -26], look:[131, 0, 0] }   //  set with T tuner 
+    },
+    { // 5 — Gusify (my company)
+      eyebrow:'My Company · Founder & CEO',
+      title:'Gusify',
+      role:'Founder & CEO · Designer & Lead Developer',
+      desc:`Gusify is my company: an independent web design and development studio that builds premium, hand-coded websites for small businesses. I founded it and I run it end to end, from the first client call, proposal and pricing through design, development, launch, hosting and ongoing care. Our live client work includes marlerenterprises.com and 2kdhoodcleaning.com.
+
+      THE STUDIO SITE — gusify.net is a Next.js 15, React 19 and TypeScript app, statically exported and served by a Cloudflare Worker that also runs the site's APIs. The brand is built around the Gusify mark, a gold "G" cut from a diamond outline: gold on black and cream, Syne for display type and Manrope for body copy.
+
+      SIGNATURE MOTION — The giant logo mark in the hero draws itself, glows, un-draws and loops using SVG stroke-dash animation over a normalized path length. Headlines rise out of masked lines, a ring of services rotates around the hero, and a looping browser demo plays out a site launch with an animated cursor, click ripple, loading bar and auto-scroll. Section reveals use CSS scroll-driven animations (animation-timeline: view()) with an IntersectionObserver fallback for browsers that don't support them yet.
+
+      LIVE DASHBOARDS — The "Built to perform" section has three hand-drawn HTML5 Canvas widgets: a traffic-sources donut, a live analytics chart with a moving traffic line, and a site-speed gauge. They share a small canvas helper that sizes each backing store to its CSS box at a capped device pixel ratio and drives a requestAnimationFrame loop.
+
+      3D DIAMOND WITHOUT A 3D LIBRARY — The services page features a drag-to-rotate brilliant-cut diamond drawn by a tiny 3D renderer I wrote on a 2D canvas. The gem's mesh (table, crown, girdle and pavilion facets) is generated in code, then rotated, projected and shaded face by face from its normals every frame. No Three.js.
+
+      PRICING & PLAN BUILDER — Four plans (Campus, Launch, Growth and Signature) rise as 3D pillars along a growth arrow, backed by a comparison table and FAQ. An add-on builder lets a client pick a plan, toggle features like appointment booking, a second language or advanced forms, and watch the monthly estimate update live.
+
+      INQUIRY PIPELINE — The contact form has a plan picker and an international phone field with country codes and validation (libphonenumber-js). Submissions post to the Cloudflare Worker, which re-validates them, prices the quote on the server and emails the inquiry through Resend. The same Worker serves a live stock-ticker endpoint cached at the edge for 60 seconds.
+
+      DETAILS — A custom cursor that turns gold over dark sections, confetti when an inquiry goes through, animated canvas illustrations for each step of the process, and reduced-motion support throughout.`,
+      images:['./img/gusifypics/gusify1.jpg','./img/gusifypics/gusify2.jpg','./img/gusifypics/gusify3.jpg','./img/gusifypics/gusify4.jpg','./img/gusifypics/gusify5.jpg','./img/gusifypics/gusify6.jpg'],
+      links:[{label:'Visit gusify.net ↗', href:'https://gusify.net/'}],
+      pv:'gusify',
+      cam:{ pos:[152, -3, -7], look:[0, 6, 195] }   // ← set with T tuner
     },
   ];
 
@@ -798,7 +1568,23 @@
     }else{ g.style.display='none'; g.innerHTML=''; }
     // links
     const l=document.getElementById('pdLinks');
-    l.innerHTML=d.links.map(x=>`<a class="btn live" href="${x.href}" target="_blank" rel="noopener">${x.label}</a>`).join('');
+    l.innerHTML=d.links.map(x=>x.action
+      ? `<button class="btn more" data-act="${x.action}" data-pv="${x.action}">${x.label}</button>`
+      : `<a class="btn live" href="${x.href}" target="_blank" rel="noopener" data-pv="${d.pv||''}">${x.label}</a>`).join('');
+    l.querySelectorAll('[data-act="deck"]').forEach(b=>b.addEventListener('click',()=>openPage('deckPage',b)));
+    // Gusify-style browser: types the URL, clicks, loads, then the site scrolls on its own
+    const pvd=PV[d.pv], slot=document.getElementById('pdBrowser');
+    if(stopDetailPv){ stopDetailPv(); stopDetailPv=null; }
+    if(pvd){
+      slot.innerHTML=`<div class="csb" style="--hpc:${pvd.c}">${barHTML(pvd.url,true)}
+        <div class="csb-view${pvd.type==='phone'?' phone':''}"><div class="csb-load"></div><div class="csb-start"><span>Open ${d.title} →</span></div>
+        <div class="csb-cursor">${CURSOR}</div><div class="csb-site"></div></div></div>
+        <p class="csb-note">${pvd.type==='phone'?'The real Root app, running live · tap around and try it':pvd.live?'The live website · scrolls on its own':'Preview · plays on its own'}${pvd.type==='phone'?'':' · loops'}</p>`;
+      stopDetailPv=mountPv(slot.querySelector('.csb-site'),pvd,{big:true,delay:1400});
+    }else slot.innerHTML='';
+    document.querySelector('.pd-text').scrollTop=0;
+    const card=overlay.querySelector('.pd-card');
+    card.classList.remove('fly'); void card.offsetWidth; card.classList.add('fly');
     // fly camera (app.js exposes flyToDetail)
     if(window.flyToDetail && d.cam) window.flyToDetail(d.cam);
     document.getElementById('projects').style.opacity='0';
@@ -806,11 +1592,13 @@
     document.body.style.overflow='hidden';
     overlay.classList.add('open');
   }
+  let stopDetailPv=null;
   function closeDetail(){
     overlay.classList.remove('open');
+    if(stopDetailPv){ setTimeout(()=>{ if(!overlay.classList.contains('open')&&stopDetailPv){stopDetailPv();stopDetailPv=null;} },500); }
     document.getElementById('projects').style.opacity='1';
     document.getElementById('work').style.opacity='1';
-    document.body.style.overflow='';
+    if(!document.querySelector('.pg.open')) document.body.style.overflow='';
     if(window.exitDetail) window.exitDetail();
   }
   document.querySelectorAll('.btn.more').forEach(b=>{
@@ -849,11 +1637,398 @@
   // click the dark area (not the image) to close
   lb.addEventListener('click', e=>{ if(e.target===lb) closeLightbox(); });
 
-  // Esc: close the lightbox first if it's open, otherwise close the detail
+  /* ===================== PREVIEWS (hover + detail) ===================== */
+  const TH = p => './img/pv/t/' + p.split('/').pop().replace(/\.[a-z]+$/i,'') + '.jpg';   // light thumbnail of any gallery image
+  const LOCK = '<svg viewBox="0 0 24 26" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="11" width="18" height="13" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  const CURSOR = '<svg viewBox="0 0 24 24"><path d="M5 3l14 8.5-6.2 1.3 3.6 6.9-2.6 1.4-3.6-6.9L5 19z" fill="#0a0d14" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  const PV = {
+    '2kd':  {type:'video', v:'2kd',    live:'https://2kdhoodcleaning.com/?gusify-preview=1',   url:'2kdhoodcleaning.com',   c:'#e85a4f', name:'2KD Hood Cleaning'},
+    marler: {type:'video', v:'marler', live:'https://marlerenterprises.com/?gusify-preview=1', url:'marlerenterprises.com', c:'#c9a24a', name:'Marler Enterprises'},
+    gusify: {type:'video', v:'gusify', url:'gusify.net',                  c:'#c9a24a', name:'Gusify'},
+    sw:     {type:'video', v:'sw',     url:'studyweapon.vercel.app',      c:'#5fa8ff', name:'Study Weapon'},
+    cloud:  {type:'video', v:'cloud',  url:'gusbusx.github.io/CloudDrop', c:'#9b8cff', name:'CloudDrop · live demo'},
+    root:   {type:'phone', live:'https://gusbusx.github.io/root/', url:'gusbusx.github.io/root', c:'#34d399', name:'Root · live app demo'},
+    deck:   {type:'video', v:'root',   url:'Root_Wellness_App.pptx',      c:'#34d399', name:'Pitch deck · 10 slides', hint:'Click to play'},
+    resume: {type:'video', v:'resume', url:'Augusto_Segura_Resume.pdf',   c:'#eef2fb', name:'Resume · 2 pages', hint:'Click to open'},
+    certs:  {type:'slides', srcs:[TH('okr'),TH('python'),TH('slide01')], fit:'contain', url:'Certifications & honors', c:'#ffd76a', name:'8 certificates & honors', hint:'Click to open'},
+    linkedin:{type:'li', c:'#0a66c2', name:'linkedin.com/in/gusbuses'},
+    github: {type:'gh',  c:'#3fb950', name:'github.com/gusbusx'},
+    mail:   {type:'gm',  c:'#ea4335', name:'augustoesegura@gmail.com', hint:'Click to open inbox'},
+  };
+  // "More details" previews: the same moving preview as the project's site
+  PROJECT_DETAILS.forEach((d,i)=>{ const b=PV[d.pv]; if(b) PV['d'+i]={...b, url:'Case study · '+d.title, name:d.title, hint:'Click to open'}; });
+  const HOST={'2kdhoodcleaning.com':'2kd','marlerenterprises.com':'marler','gusify.net':'gusify','studyweapon.vercel.app':'sw','gusbusx.github.io/CloudDrop':'cloud','gusbusx.github.io/root':'root'};
+  document.querySelectorAll('a.btn.live').forEach(a=>{ for(const h in HOST) if(a.href.includes(h)) a.dataset.pv=HOST[h]; });
+  document.querySelectorAll('.btn.more[data-proj]').forEach(b=>b.dataset.pv='d'+b.dataset.proj);
+
+  function barHTML(url,big){ return `<div class="hp-bar"><div class="hp-dots"><i></i><i></i><i></i></div><div class="hp-url">${LOCK}<span${big?' class="csb-type"':''}>${url}</span></div>${big?'<div style="width:46px"></div>':''}</div>`; }
+
+  // Mount an always-moving preview into `box`: a looping video, the real live site, or a slideshow. Returns stop().
+  function mountPv(box, pv, {big=false, delay=0, hold=1800}={}){
+    let alive=true, timers=[], vid=null, ro=null;
+    const later=(f,ms)=>timers.push(setTimeout(()=>alive&&f(),ms));
+    if(pv.type==='phone'){
+      // the real app, running live inside a phone frame
+      box.insertAdjacentHTML('beforeend',`<div class="ph"><div class="ph-scr"><div class="ph-boot"><b>Root</b><span>Burnout prevention, rooted in you</span><i></i></div></div><span class="ph-isl"></span></div>`);
+      const ph=box.querySelector('.ph'), scr=box.querySelector('.ph-scr');
+      const fr=document.createElement('iframe');
+      fr.title='Root app, live'; fr.setAttribute('allow','geolocation'); fr.tabIndex=big?0:-1;
+      fr.addEventListener('load',()=>later(()=>scr.classList.add('on'),big?1600:1200));
+      scr.appendChild(fr);
+      const fit=()=>{ const h=box.clientHeight, w=box.clientWidth; if(!h) return;
+        const s=Math.min((h*0.9)/868,(w*0.9)/414); ph.style.transform=`translate(-50%,-50%) scale(${s})`; };
+      fit(); ro=new ResizeObserver(fit); ro.observe(box);
+      later(()=>{ fr.src=pv.live; }, delay);
+    }else if(pv.type==='video'){
+      vid=document.createElement('video');
+      vid.className='pv-vid'; vid.muted=true; vid.defaultMuted=true; vid.loop=true; vid.playsInline=true;
+      vid.setAttribute('muted',''); vid.setAttribute('playsinline',''); vid.preload='auto';
+      vid.poster=`./img/pv/${pv.v}-poster.jpg`; vid.src=`./img/pv/${pv.v}-${big?'lg':'sm'}.mp4`;
+      box.appendChild(vid);
+      const play=()=>{ const p=vid.play(); if(p&&p.catch) p.catch(()=>{}); };
+      delay?later(play,delay):play();
+      // the real website, live, scrolling itself (2KD + Marler have the preview snippet)
+      if(big && pv.live){
+        const wrap=document.createElement('div'); wrap.className='pv-live';
+        const fr=document.createElement('iframe');
+        fr.title='Live preview of '+pv.url; fr.tabIndex=-1; fr.setAttribute('scrolling','no');
+        fr.setAttribute('sandbox','allow-scripts allow-same-origin'); fr.referrerPolicy='no-referrer-when-downgrade';
+        const fit=()=>{ const w=box.clientWidth,h=box.clientHeight; if(!w||!h) return; const VW=1440, s=w/VW;
+          fr.style.width=(VW+40)+'px'; fr.style.height=Math.ceil(h/s)+'px'; fr.style.transform=`scale(${s})`; };
+        fr.addEventListener('load',()=>later(()=>{ wrap.classList.add('on'); vid.pause(); },1200));
+        wrap.appendChild(fr); box.appendChild(wrap);
+        box.insertAdjacentHTML('beforeend','<span class="pv-live-tag"><i></i>Live site</span>');
+        fit(); ro=new ResizeObserver(fit); ro.observe(box);
+        later(()=>{ fr.src=pv.live; }, delay);
+      }
+    }else{
+      const srcs=pv.srcs||[];
+      const els=srcs.map(s=>{const im=new Image(); im.className='pv-sl'+(pv.fit==='contain'?' contain':''); im.src=s; im.alt=''; box.appendChild(im); return im;});
+      const prog=document.createElement('div'); prog.className='pv-prog'; box.appendChild(prog);
+      const dots=document.createElement('div'); dots.className='pv-dots'; dots.innerHTML=srcs.map(()=>'<i></i>').join(''); box.appendChild(dots);
+      let k=-1;
+      const next=()=>{ const prev=els[k]; if(prev){prev.classList.remove('on');prev.classList.add('out');later(()=>prev.classList.remove('out'),700);}
+        k=(k+1)%els.length; els[k].classList.add('on');
+        [...dots.children].forEach((d,j)=>d.classList.toggle('on',j===k));
+        prog.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:hold,easing:'linear',fill:'forwards'});
+        later(next,hold); };
+      later(next,delay);
+    }
+    return ()=>{ alive=false; timers.forEach(clearTimeout); if(ro) ro.disconnect();
+      if(vid){ vid.pause(); vid.removeAttribute('src'); vid.load(); }
+      box.innerHTML=''; };
+  }
+
+  function cardHTML(pv){
+    if(pv.type==='li') return `<div class="hp-win hp-li"><div class="cov"></div><div class="av" style="background-image:url(./img/profilepic.png)"></div>
+      <div class="bd"><h4>Augusto Segura <small>· He/Him</small></h4>
+      <p>Founder &amp; CEO @ Gusify · Computer Science @ Rutgers University · Full-stack developer</p>
+      <div class="loc">Elizabeth, New Jersey · Contact info</div>
+      <div class="row"><i>Connect</i><i>Message</i></div>
+      <div class="exp">${['gusify-logo.svg','eps-logo.jpg','2kd-logo.png','marler-logo.png','root-logo.jpg'].map((s,i)=>`<img class="${i?'':'dk'}" src="./img/${s}" alt="" style="animation-delay:${.15+i*.08}s">`).join('')}<span>Experience</span></div></div></div>`;
+    if(pv.type==='gm') return `<div class="hp-win hp-gm"><div class="hd"><img src="./img/gmail.jpg" alt=""><b>Inbox</b><span></span></div>
+      <div class="bx"><div class="rw nw"><b>You</b><span><em>Hi Augusto!</em> — Loved your portfolio, let's talk…</span><small>now</small></div>
+      <div class="rw"><b>Augusto Segura</b><span><em>👋 Thanks for stopping by!</em> — Hit Compose…</span><small>now</small></div>
+      <div class="rw rd"><b>Gusify</b><span><em>Need a website?</em> — Let's build it</span><small>9:41</small></div>
+      <div class="rw rd"><b>Augusto Segura</b><span><em>My resume</em> — PDF attached</span><small>Mon</small></div>
+      <div class="rw rd"><b>Root Team</b><span><em>🏆 1st place</em> — Fiserv × Rutgers</span><small>Apr 25</small></div></div>
+      <div class="cm"><i>✎ Compose</i></div></div>`;
+    if(pv.type==='gh') return `<div class="hp-win hp-gh"><div class="hd"><img src="./img/github.png" alt=""><div><b>gusbusx</b><small>Augusto Segura</small></div></div>
+      ${[['root','Location-aware wellness app · 1st place hackathon','Dart','#00B4AB'],['CloudDrop','Dropbox-style cloud file storage','TypeScript','#3178c6']]
+        .map((r,i)=>`<div class="rp" style="animation-delay:${.12+i*.1}s"><b>${r[0]}</b><p>${r[1]}</p><em><i style="--lc:${r[3]}"></i>${r[2]}</em></div>`).join('')}</div>`;
+    return `<div class="hp-win">${barHTML(pv.url)}<div class="hp-view${pv.type==='phone'?' phone':''}"></div></div>`;
+  }
+
+  const hp=document.getElementById('hp'); let hpEl=null, hpT=0, hpStop=null, hpHide=0;
+  function showHP(el){
+    const pv=PV[el.dataset.pv]; if(!pv) return;
+    clearTimeout(hpHide); if(hpStop){hpStop();hpStop=null;}
+    const ext=el.target==='_blank';
+    hp.style.setProperty('--hpc',pv.c);
+    hp.innerHTML=cardHTML(pv)+`<div class="hp-cap"><b>${pv.name}</b><span>${pv.hint||(ext?'Opens in new tab ↗':'Click to open')}</span></div>`;
+    const view=hp.querySelector('.hp-view'); if(view) hpStop=mountPv(view,pv,{hold:1800});
+    placeHP(el);
+    requestAnimationFrame(()=>hp.classList.add('on'));
+  }
+  function placeHP(el){
+    const r=el.getBoundingClientRect(), w=hp.offsetWidth, h=hp.offsetHeight;
+    const x=Math.max(12,Math.min(innerWidth-w-12, r.left+r.width/2-w/2));
+    const above=r.top>h+24;
+    hp.classList.toggle('below',!above);
+    hp.style.left=x+'px'; hp.style.top=(above? r.top-h-14 : r.bottom+14)+'px';
+    hp.style.setProperty('--ox',(r.left+r.width/2-x)+'px');
+  }
+  function hideHP(){ hp.classList.remove('on'); clearTimeout(hpHide); hpHide=setTimeout(()=>{ if(hpStop){hpStop();hpStop=null;} },300); }
+  document.addEventListener('pointerover',e=>{
+    if(e.pointerType!=='mouse') return;
+    const el=e.target.closest('[data-pv]'); if(!el||el===hpEl) return;
+    hpEl=el; clearTimeout(hpT); hpT=setTimeout(()=>{ if(hpEl===el) showHP(el); },110);
+  });
+  document.addEventListener('pointerout',e=>{
+    const el=e.target.closest('[data-pv]'); if(!el||el!==hpEl) return;
+    if(e.relatedTarget&&el.contains(e.relatedTarget)) return;
+    hpEl=null; clearTimeout(hpT); hideHP();
+  });
+  addEventListener('scroll',()=>{ if(hpEl&&hp.classList.contains('on')) placeHP(hpEl); },{passive:true,capture:true});
+  document.addEventListener('click',()=>{ hpEl=null; clearTimeout(hpT); hideHP(); },true);
+
+  /* ===================== FULL-SCREEN PAGES ===================== */
+  const anyOpen=()=>overlay.classList.contains('open')||!!document.querySelector('.pg.open');
+  let pgZ=0;
+  function openPage(id, from){
+    const pg=document.getElementById(id), inner=pg.querySelector('.pg-in');
+    if(from){ const r=from.getBoundingClientRect(); inner.style.setProperty('--fo',`${(r.left+r.width/2)/innerWidth*100}% ${Math.min(100,(r.top+r.height/2)/innerHeight*100)}%`); }
+    pg.style.zIndex=95+(++pgZ); pg.scrollTop=0; pg.classList.add('open'); pg.setAttribute('aria-hidden','false');
+    inner.classList.remove('fly'); void inner.offsetWidth; inner.classList.add('fly');
+    document.body.style.overflow='hidden';
+    pg.dispatchEvent(new Event('pgopen'));
+  }
+  function closePage(pg){
+    pg.classList.remove('open'); pg.setAttribute('aria-hidden','true');
+    pg.dispatchEvent(new Event('pgclose'));
+    if(!anyOpen()) document.body.style.overflow='';
+  }
+  document.querySelectorAll('.pg').forEach(pg=>{
+    pg.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closePage(pg)));
+  });
+
+  /* ===================== CERTIFICATIONS ===================== */
+  const ICON={
+    trophy:'<svg viewBox="0 0 48 48"><path pathLength="1" d="M15 6h18v12a9 9 0 0 1-18 0z"/><path pathLength="1" d="M15 10H8a6 6 0 0 0 7 8M33 10h7a6 6 0 0 1-7 8"/><path pathLength="1" d="M24 27v7M16 42h16l-2-8H18z"/></svg>',
+    box:'<svg viewBox="0 0 48 48"><path pathLength="1" d="M6 15l18-9 18 9v18l-18 9-18-9z"/><path pathLength="1" d="M6 15l18 9 18-9M24 24v18"/><path pathLength="1" d="M15 10.5l18 9"/></svg>',
+    globe:'<svg viewBox="0 0 48 48"><circle pathLength="1" cx="24" cy="24" r="17"/><path pathLength="1" d="M7 24h34M24 7c-6 6-6 28 0 34M24 7c6 6 6 28 0 34"/></svg>',
+    star:'<svg viewBox="0 0 48 48"><path pathLength="1" d="M24 5l5.6 11.6 12.7 1.8-9.2 8.9 2.2 12.6L24 34l-11.3 5.9 2.2-12.6-9.2-8.9 12.7-1.8z"/></svg>',
+    flask:'<svg viewBox="0 0 48 48"><path pathLength="1" d="M19 5h10M21 5v13L9 39a3 3 0 0 0 2.6 4.5h24.8A3 3 0 0 0 39 39L27 18V5"/><path pathLength="1" d="M14 30h20"/></svg>',
+    code:'<svg viewBox="0 0 48 48"><path pathLength="1" d="M16 14L6 24l10 10M32 14l10 10-10 10M27 9l-6 30"/></svg>',
+  };
+  const CERTS = [
+    { cat:'cert', title:'Goal Setting: Objectives and Key Results (OKRs)', issuer:'LinkedIn Learning', date:'Dec 2025',
+      skills:['OKRs','Goal Setting'], img:'./img/certs/okr.jpg', pdf:'./img/certs/okr-certificate.pdf', color:'#0a66c2' },
+    { cat:'cert', title:'Python Bootcamp', issuer:'Crookshanks Academy', date:'Feb 2025',
+      skills:['Python','Programming'], img:'./img/certs/python.jpg', pdf:'./img/certs/python-certificate.pdf', color:'#3776AB' },
+    { cat:'award', title:'1st Place · Fiserv × Rutgers Newark Hackathon', issuer:'Fiserv × Rutgers–Newark', date:'Apr 2026',
+      skills:['Flutter','Team of 3','Pitch'], img:'./img/rootpics/slide01.jpg', deck:true, color:'#34d399' },
+    { cat:'cert', title:'Amazon Certificate', issuer:'Amazon', skills:['Operations','Safety'], icon:'box', color:'#ff9900' },
+    { cat:'award', title:'Seal of Biliteracy', issuer:'Language honor', skills:['English','Spanish'], icon:'globe', color:'#5fa8ff' },
+    { cat:'award', title:'EOF Scholar', issuer:'Educational Opportunity Fund', skills:['Scholarship'], icon:'star', color:'#ffd76a' },
+    { cat:'award', title:'Chemistry Scholar', issuer:'Academic honor', skills:['Chemistry'], icon:'flask', color:'#2dd4bf' },
+    { cat:'award', title:'Top 3 in Computer Science Class', issuer:'High school', skills:['Computer Science'], icon:'code', color:'#9b8cff' },
+  ];
+  const certPage=document.getElementById('certPage'), cmGrid=document.getElementById('cmGrid'), cf=document.getElementById('certFilter');
+  document.getElementById('certCount').textContent=CERTS.length;
+  cmGrid.innerHTML=CERTS.map((c,i)=>`
+    <article class="cert" data-cat="${c.cat}" style="--i:${i};--c:${c.color}"><div class="cert-in">
+      ${c.img
+        ? `<button class="cert-img${c.deck?' deck-img':''}" data-i="${i}" aria-label="Enlarge ${c.title}"><img src="${c.img}" alt="${c.title}"><span class="cert-shine"></span></button>`
+        : `<div class="cert-art"><span class="ca-k">${c.cat==='cert'?'Certificate':'Honor'}</span>${ICON[c.icon]}<span class="cert-shine"></span></div>`}
+      <div class="cert-body">
+        <div class="cert-issuer"><i></i>${c.issuer}${c.date?' · '+c.date:''}</div>
+        <h3>${c.title}</h3>
+        <div class="stack">${c.skills.map(s=>`<span>${s}</span>`).join('')}</div>
+        ${c.pdf?`<a class="btn more" href="${c.pdf}" target="_blank" rel="noopener">View certificate ↗</a>`:''}
+        ${c.deck?`<button class="btn more deck-open" data-pv="deck">▶ View presentation</button>`:''}
+      </div>
+    </div></article>`).join('');
+  const CATS=[['all','All'],['cert','Certificates'],['award','Honors & awards']];
+  cf.innerHTML=CATS.map(([k,l],i)=>`<button data-k="${k}" class="${i?'':'on'}">${l}<em>${k==='all'?CERTS.length:CERTS.filter(c=>c.cat===k).length}</em></button>`).join('');
+  cf.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    cf.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    let n=0;
+    cmGrid.querySelectorAll('.cert').forEach(el=>{
+      const show=b.dataset.k==='all'||el.dataset.cat===b.dataset.k;
+      el.classList.toggle('hide',!show);
+      if(show){ el.style.setProperty('--i',n++); el.style.animation='none'; void el.offsetWidth; el.style.animation=''; }
+    });
+  });
+  document.getElementById('certBtn').addEventListener('click',e=>openPage('certPage',e.currentTarget));
+  cmGrid.addEventListener('click',e=>{
+    const b=e.target.closest('.cert-img'); if(!b) return;
+    const withImg=CERTS.filter(c=>c.img);
+    window.__lbList=withImg.map(c=>c.img); openLightbox(withImg.indexOf(CERTS[+b.dataset.i]));
+  });
+  cmGrid.querySelectorAll('.cert-in').forEach(card=>{
+    card.addEventListener('pointermove',e=>{
+      if(e.pointerType!=='mouse') return;
+      const r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+      card.style.transform=`perspective(900px) rotateX(${(.5-y)*8}deg) rotateY(${(x-.5)*10}deg) translateY(-4px)`;
+      card.style.setProperty('--mx',x*100+'%'); card.style.setProperty('--my',y*100+'%');
+    });
+    card.addEventListener('pointerleave',()=>{ card.style.transform=''; });
+  });
+
+  /* ===================== RESUME ===================== */
+  document.getElementById('cvBtn').addEventListener('click',e=>openPage('cvPage',e.currentTarget));
+  document.querySelectorAll('#cvPage .cv-pages img').forEach((im,i,all)=>im.addEventListener('click',()=>{ window.__lbList=[...all].map(x=>x.src); openLightbox(i); }));
+
+  /* ===================== ROOT PRESENTATION ===================== */
+  const deckPage=document.getElementById('deckPage'), dkStage=document.getElementById('dkStage'), dkThumbs=document.getElementById('dkThumbs');
+  const SLIDES=[1,2,3,4,5,6,7,8,9,10].map(i=>`./img/rootpics/slide${String(i).padStart(2,'0')}.jpg`);
+  dkStage.insertAdjacentHTML('afterbegin',SLIDES.map((s,i)=>`<img src="${s}" alt="Root slide ${i+1}" loading="lazy">`).join(''));
+  dkThumbs.innerHTML=SLIDES.map((s,i)=>`<button data-i="${i}" aria-label="Slide ${i+1}"><img src="${TH(s)}" alt="" loading="lazy"></button>`).join('');
+  const dkImgs=[...dkStage.querySelectorAll('img')], dkBtns=[...dkThumbs.children], dkProg=document.getElementById('dkProg'), dkPlay=document.getElementById('dkPlay');
+  let dk=0, dkTimer=0, dkAuto=true, dkAnim=null; const DK_MS=5000;
+  function dkShow(i){
+    dk=(i+SLIDES.length)%SLIDES.length;
+    dkImgs.forEach((im,j)=>im.classList.toggle('on',j===dk)); dkBtns.forEach((b,j)=>b.classList.toggle('on',j===dk));
+    document.getElementById('dkCount').textContent=`${dk+1} / ${SLIDES.length}`;
+    clearTimeout(dkTimer); if(dkAnim) dkAnim.cancel();
+    if(dkAuto && deckPage.classList.contains('open')){
+      dkAnim=dkProg.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:DK_MS,easing:'linear',fill:'forwards'});
+      dkTimer=setTimeout(()=>dkShow(dk+1),DK_MS);
+    }
+  }
+  document.getElementById('dkPrev').addEventListener('click',()=>dkShow(dk-1));
+  document.getElementById('dkNext').addEventListener('click',()=>dkShow(dk+1));
+  dkThumbs.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) dkShow(+b.dataset.i); });
+  dkPlay.addEventListener('click',()=>{ dkAuto=!dkAuto; dkPlay.textContent=dkAuto?'❚❚ Pause':'▶ Play'; dkShow(dk); });
+  deckPage.addEventListener('pgopen',()=>{ dkAuto=true; dkPlay.textContent='❚❚ Pause'; dkShow(0); });
+  deckPage.addEventListener('pgclose',()=>{ clearTimeout(dkTimer); if(dkAnim) dkAnim.cancel(); });
+  document.addEventListener('click',e=>{ const b=e.target.closest('.deck-open'); if(b) openPage('deckPage',b); });
+
+
+  /* ===================== EMAIL INBOX ===================== */
+  const MAILS = [
+    { id:'hi', from:'Augusto Segura', av:'./img/profilepic.png', cat:'primary', time:'now', star:true,
+      subj:'👋 Thanks for stopping by!', snip:'Got a project, a role, or just want to say hi? Hit Compose and it goes straight to my inbox.',
+      body:`<p>Hey there,</p><p>Thanks for checking out my portfolio! I'm Augusto: founder &amp; CEO of Gusify and a Computer Science student at Rutgers University–New Brunswick, Class of 2027.</p><p>If you're hiring, have a project in mind, or just want to connect, hit <b>Compose</b> and write me right here. It lands in my real inbox and I usually reply within a day or two.</p><p>Talk soon,<br>Augusto</p>`,
+      acts:[['Reply','compose',1],['Forward to LinkedIn ↗','https://www.linkedin.com/in/gusbuses/']] },
+    { id:'gusify', from:'Gusify', av:'./img/gusify-logo.svg', dark:1, cat:'projects', time:'9:41 AM', lbl:['Gusify','#b8892f'],
+      subj:'Need a website? Let’s build it.', snip:'Premium, hand-coded websites for small businesses: design, development, launch and ongoing care.',
+      body:`<p>Gusify is my web design and development studio.</p><p>We design and hand-code premium websites for small businesses, then handle hosting, updates and support after launch. Live client work includes <b>marlerenterprises.com</b> and <b>2kdhoodcleaning.com</b>.</p><p>Want one? Reply here or start a project on gusify.net.</p>`,
+      acts:[['Visit gusify.net ↗','https://gusify.net/',1],['Reply','compose']] },
+    { id:'cv', from:'Augusto Segura', av:'./img/profilepic.png', cat:'primary', time:'Yesterday',
+      subj:'My resume', snip:'Here it is: education, skills, experience and projects in two pages.',
+      body:`<p>Here's my current resume. You can open it right here or download the PDF.</p>`,
+      att:[['Augusto_Segura_Resume.pdf','PDF','#d93025','resume']], acts:[['Open resume','resume',1]] },
+    { id:'root', from:'Root Team', av:'./img/root-logo.jpg', cat:'projects', time:'Apr 25', star:true, lbl:['Hackathon','#188038'],
+      subj:'🏆 We took 1st place at the Fiserv × Rutgers Newark Hackathon', snip:'Root, our burnout-prevention app, won 1st. The pitch deck is attached.',
+      body:`<p>Root is a calm, gamified mobile app that detects burnout signals and helps people recover before it's too late. Our 3-person team built it in Flutter and won <b>1st place</b> at the Fiserv × Rutgers Newark Hackathon.</p><p>The deck we presented to the Fiserv judges is attached.</p>`,
+      att:[['Root_Wellness_App.pptx','PPT','#d24726','deck']], acts:[['Play the deck','deck',1],['Try the app ↗','https://gusbusx.github.io/root/']] },
+    { id:'marler', from:'Augusto Segura', av:'./img/marler-logo.png', cat:'projects', time:'Oct 22', lbl:['Shipped','#c9a24a'],
+      subj:'Shipped: marlerenterprises.com', snip:'A scroll-driven site for a bookkeeping and admin firm, built from a blank file.',
+      body:`<p>I designed and built the full website for Marler Enterprises, a bookkeeping and administrative services firm in Roselle, NJ: scroll-driven storytelling, live UI mockups, a hand-drawn canvas chart and a working contact form.</p>`,
+      acts:[['Visit the site ↗','https://marlerenterprises.com/',1],['Case study','proj:4']] },
+    { id:'certs', from:'Certifications', av:'./img/pv/t/okr.jpg', cat:'updates', time:'Dec 6',
+      subj:'8 certificates & honors', snip:'OKRs (LinkedIn Learning), Python Bootcamp, Seal of Biliteracy, EOF Scholar and more.',
+      body:`<p>Certificates I've earned and honors I've received, including <b>Goal Setting: Objectives and Key Results</b> (LinkedIn Learning), the <b>Python Bootcamp</b> (Crookshanks Academy), the <b>Seal of Biliteracy</b> and <b>EOF Scholar</b>.</p>`,
+      acts:[['View certifications','certs',1]] },
+  ];
+  const SENT=[];
+  const mailPage=document.getElementById('mailPage'), gmList=document.getElementById('gmList'), gmRead=document.getElementById('gmRead');
+  const gmCmp=document.getElementById('gmCmp'), gmToast=document.getElementById('gmToast');
+  let gmBox='inbox', gmCat='primary', gmSeen=new Set(), gmQ='';
+  const ST_ON=`<svg class="st on" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+  const ST_OFF=`<svg class="st" viewBox="0 0 24 24" fill="currentColor"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg>`;
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function gmItems(){
+    let L = gmBox==='sent'? SENT : gmBox==='starred'? MAILS.filter(m=>m.star) : MAILS.filter(m=>m.cat===gmCat);
+    if(gmQ) L=(gmBox==='sent'?SENT:MAILS).filter(m=>(m.from+' '+m.subj+' '+m.snip).toLowerCase().includes(gmQ));
+    return L;
+  }
+  function gmRender(newId){
+    const L=gmItems();
+    document.getElementById('gmTabs').style.display=(gmBox==='inbox'&&!gmQ)?'':'none';
+    gmList.innerHTML = L.length ? L.map((m,k)=>`
+      <div class="gm-row${gmSeen.has(m.id)||m.sent?' read':''}${m.id===newId?' new':''}" data-id="${m.id}" style="--k:${k}">
+        <span class="ck"></span>${m.star?ST_ON:ST_OFF}
+        <span class="fr">${esc(m.sent?'To: Augusto':m.from)}</span>
+        <span class="sj">${m.lbl?`<span class="lbl" style="--lc:${m.lbl[1]}">${m.lbl[0]}</span>`:''}<b>${esc(m.subj)}</b><span> — ${esc(m.snip)}</span></span>
+        <span class="tm">${m.time}</span></div>`).join('')
+      : `<div class="gm-empty">${gmBox==='sent'?'No sent messages yet. Hit <b>Compose</b> to write one.':'Nothing here.'}</div>`;
+    const unread=MAILS.filter(m=>!gmSeen.has(m.id)).length;
+    document.getElementById('gmUnread').textContent=unread||'';
+    document.getElementById('gmCount').textContent=L.length?`1–${L.length} of ${L.length}`:'';
+    document.querySelectorAll('#gmTabs .gm-tab').forEach(tb=>{ const n=MAILS.filter(m=>m.cat===tb.dataset.cat&&!gmSeen.has(m.id)).length; tb.querySelector('b').textContent=n?`${n} new`:''; tb.querySelector('b').style.display=n?'':'none'; });
+  }
+  function gmOpen(id){
+    const m=MAILS.find(x=>x.id===id)||SENT.find(x=>x.id===id); if(!m) return;
+    gmSeen.add(id);
+    gmRead.innerHTML=`<button class="gm-ib" data-back aria-label="Back to inbox">${ICO_BACK}</button>
+      <h2>${esc(m.subj)}</h2>
+      <div class="gm-from"><img class="gm-av" src="${m.sent?'./img/profilepic.png':m.av}" alt="" ${m.dark?'style="background:#0a0a0a"':''}>
+        <div><b>${esc(m.sent?m.name:m.from)}</b> <small>${m.sent?esc(m.email)+' · to Augusto Segura':'to me'}</small></div><span class="tm">${m.time}</span></div>
+      <div class="gm-body">${m.body}</div>
+      ${m.att?`<div class="gm-att">${m.att.map(a=>`<button data-act="${a[3]}"><i style="--ac:${a[2]}">${a[1]}</i>${a[0]}</button>`).join('')}</div>`:''}
+      ${m.acts?`<div class="gm-acts">${m.acts.map(a=>/^https?:/.test(a[1])
+        ?`<a class="gm-pill${a[2]?' pri':''}" href="${a[1]}" target="_blank" rel="noopener">${a[0]}</a>`
+        :`<button class="gm-pill${a[2]?' pri':''}" data-act="${a[1]}">${a[0]}</button>`).join('')}</div>`:''}`;
+    gmRead.classList.add('on'); gmRender();
+  }
+  const ICO_BACK='<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>';
+  gmList.addEventListener('click',e=>{
+    const st=e.target.closest('.st'), row=e.target.closest('.gm-row'); if(!row) return;
+    const m=MAILS.find(x=>x.id===row.dataset.id);
+    if(st&&m){ m.star=!m.star; gmRender(); return; }
+    gmOpen(row.dataset.id);
+  });
+  gmRead.addEventListener('click',e=>{
+    if(e.target.closest('[data-back]')){ gmRead.classList.remove('on'); return; }
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const a=b.dataset.act;
+    if(a==='compose') gmCompose(true);
+    else if(a==='resume') openPage('cvPage',b);
+    else if(a==='deck') openPage('deckPage',b);
+    else if(a==='certs') openPage('certPage',b);
+    else if(a.startsWith('proj:')){ closePage(mailPage); openDetail(+a.slice(5)); }
+  });
+  document.querySelectorAll('#mailPage [data-box]').forEach(n=>n.addEventListener('click',()=>{
+    document.querySelectorAll('#mailPage [data-box]').forEach(x=>x.classList.toggle('on',x===n));
+    gmBox=n.dataset.box; gmRead.classList.remove('on'); gmRender();
+  }));
+  document.getElementById('gmTabs').addEventListener('click',e=>{
+    const tb=e.target.closest('.gm-tab'); if(!tb) return;
+    document.querySelectorAll('#gmTabs .gm-tab').forEach(x=>x.classList.toggle('on',x===tb));
+    gmCat=tb.dataset.cat; gmRead.classList.remove('on'); gmRender();
+  });
+  document.getElementById('gmQ').addEventListener('input',e=>{ gmQ=e.target.value.trim().toLowerCase(); gmRead.classList.remove('on'); gmRender(); });
+  document.getElementById('gmRefresh').addEventListener('click',()=>{ gmList.querySelectorAll('.gm-row').forEach(r=>{r.style.animation='none';void r.offsetWidth;r.style.animation='';}); });
+  function gmCompose(on){ gmCmp.classList.toggle('on',on); gmCmp.classList.remove('min'); if(on) setTimeout(()=>document.getElementById(document.getElementById('gmName').value?'gmMsg':'gmName').focus({preventScroll:true}),450); }
+  document.querySelectorAll('#mailPage [data-compose]').forEach(b=>b.addEventListener('click',()=>gmCompose(true)));
+  document.getElementById('gmCmpX').addEventListener('click',e=>{ e.stopPropagation(); gmCompose(false); });
+  document.getElementById('gmMin').addEventListener('click',e=>{ e.stopPropagation(); gmCmp.classList.toggle('min'); });
+  document.getElementById('gmCmpH').addEventListener('click',()=>{ if(gmCmp.classList.contains('min')) gmCmp.classList.remove('min'); });
+  document.getElementById('gmSend').addEventListener('click',async()=>{
+    const btn=document.getElementById('gmSend'), err=document.getElementById('gmErr');
+    const n=document.getElementById('gmName').value.trim(), em=document.getElementById('gmEmail').value.trim(),
+          s=document.getElementById('gmSubj').value.trim(), m=document.getElementById('gmMsg').value.trim();
+    err.textContent='';
+    if(!n||!m){ err.textContent='Please add your name and a message.'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.textContent='Please enter a valid email so I can write back.'; return; }
+    btn.disabled=true; btn.textContent='Sending…';
+    try{
+      const res=await window.__sendContact({name:n,email:em,subject:s,message:m,source:'Inbox'});
+      if(!res.ok) throw new Error('send');
+      const id='s'+Date.now();
+      SENT.unshift({id,sent:1,name:n,email:em,subj:s||'(no subject)',snip:m.slice(0,90),body:esc(m).replace(/\n/g,'<br>'),time:new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})});
+      ['gmSubj','gmMsg'].forEach(i=>document.getElementById(i).value='');
+      confetti(btn); gmCompose(false);
+      gmToast.classList.add('on'); gmToast.dataset.id=id; setTimeout(()=>gmToast.classList.remove('on'),5000);
+      if(gmBox==='sent') gmRender(id);
+    }catch(e){ err.textContent='Couldn’t send right now. Try again, or use "Open in Gmail instead".'; }
+    btn.disabled=false; btn.textContent='Send';
+  });
+  document.getElementById('gmToastView').addEventListener('click',()=>{
+    gmToast.classList.remove('on');
+    document.querySelector('#mailPage [data-box="sent"]').click(); gmOpen(gmToast.dataset.id);
+  });
+  document.getElementById('mailLink').addEventListener('click',e=>{ e.preventDefault(); openPage('mailPage',e.currentTarget); });
+  mailPage.addEventListener('pgopen',()=>{ gmRead.classList.remove('on'); gmRender(); setTimeout(()=>{ if(mailPage.classList.contains('open')) gmCompose(true); },900); });
+  mailPage.addEventListener('pgclose',()=>{ gmCompose(false); gmToast.classList.remove('on'); });
+  gmRender();
+
+  // Esc: close the lightbox first, then the certificates, then the project detail
   addEventListener('keydown', e=>{
     if(e.key==='Escape'){
       if(lb.classList.contains('open')) closeLightbox();
+      else if(mailPage.classList.contains('open') && gmCmp.classList.contains('on') && !gmCmp.classList.contains('min')) gmCompose(false);
+      else if(mailPage.classList.contains('open') && gmRead.classList.contains('on')) gmRead.classList.remove('on');
+      else if(document.querySelector('.pg.open')){ const all=[...document.querySelectorAll('.pg.open')]; closePage(all[all.length-1]); }
       else if(overlay.classList.contains('open')) closeDetail();
+    }
+    if(deckPage.classList.contains('open') && !lb.classList.contains('open')){
+      if(e.key==='ArrowLeft') dkShow(dk-1);
+      if(e.key==='ArrowRight') dkShow(dk+1);
     }
     // arrow keys flip through images while the lightbox is open
     if(lb.classList.contains('open')){
