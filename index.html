@@ -520,6 +520,22 @@
   .cert-modal.open .cert-art svg *{stroke-dashoffset:0;transition:stroke-dashoffset 1.6s var(--ease-out) calc(.6s + var(--i)*.12s)}
   .cert-art .ca-k{position:absolute;left:16px;top:14px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6)}
   .cert-img.deck-img img{object-position:left center}
+  .cert-body .btn+.btn{margin-left:6px}
+  .cert-li{background:#f3f2ef!important;cursor:pointer}
+  .li-post{position:absolute;inset:10px;display:flex;flex-direction:column;background:#fff;border-radius:10px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.15);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;color:#1d2226;text-align:left}
+  .lp-h{display:flex;align-items:center;gap:8px;padding:8px 10px 4px}
+  .lp-h img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+  .lp-h b{display:block;font-size:12px}.lp-h small{display:block;font-size:10px;color:#666}
+  .lp-in{width:18px;height:18px;margin-left:auto;flex:none}
+  .lp-t{font-size:11px;line-height:1.35;padding:2px 10px 6px}
+  .lp-img{position:relative;flex:1;min-height:0;overflow:hidden}
+  .lp-img img{width:100%;height:100%;object-fit:cover;object-position:left top}
+  .lp-img em{position:absolute;right:8px;top:8px;font-style:normal;font-size:11px;font-weight:700;color:#1d1406;background:linear-gradient(135deg,#ffd76a,#e8c877);
+    padding:3px 9px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .lp-f{display:flex;align-items:center;justify-content:space-between;font-size:10.5px;color:#0a66c2;font-weight:600;padding:6px 10px;border-top:1px solid #eee}
+  .lp-f i{font-style:normal;letter-spacing:-2px}
+  .cert-li:hover .lp-img img{transform:scale(1.04)}
 
   /* resume page */
   .cv-pages{display:flex;flex-direction:column;align-items:center;gap:26px;margin-top:44px;perspective:1400px}
@@ -1650,7 +1666,7 @@
     root:   {type:'phone', live:'https://gusbusx.github.io/root/', url:'gusbusx.github.io/root', c:'#34d399', name:'Root · live app demo'},
     deck:   {type:'video', v:'root',   url:'Root_Wellness_App.pptx',      c:'#34d399', name:'Pitch deck · 10 slides', hint:'Click to play'},
     resume: {type:'video', v:'resume', url:'Augusto_Segura_Resume.pdf',   c:'#eef2fb', name:'Resume · 2 pages', hint:'Click to open'},
-    certs:  {type:'slides', srcs:[TH('okr'),TH('python'),TH('slide01')], fit:'contain', url:'Certifications & honors', c:'#ffd76a', name:'8 certificates & honors', hint:'Click to open'},
+    certs:  {type:'slides', srcs:[TH('okr'),TH('python'),TH('seal'),TH('eof')], fit:'contain', url:'Certifications & honors', c:'#ffd76a', name:'8 certificates & honors', hint:'Click to open'},
     linkedin:{type:'li', c:'#0a66c2', name:'linkedin.com/in/gusbuses'},
     github: {type:'gh',  c:'#3fb950', name:'github.com/gusbusx'},
     mail:   {type:'gm',  c:'#ea4335', name:'augustoesegura@gmail.com', hint:'Click to open inbox'},
@@ -1807,10 +1823,12 @@
     { cat:'cert', title:'Python Bootcamp', issuer:'Crookshanks Academy', date:'Feb 2025',
       skills:['Python','Programming'], img:'./img/certs/python.jpg', pdf:'./img/certs/python-certificate.pdf', color:'#3776AB' },
     { cat:'award', title:'1st Place · Fiserv × Rutgers Newark Hackathon', issuer:'Fiserv × Rutgers–Newark', date:'Apr 2026',
-      skills:['Flutter','Team of 3','Pitch'], img:'./img/rootpics/slide01.jpg', deck:true, color:'#34d399' },
+      skills:['Flutter','Team of 3','Pitch'], li:'https://www.linkedin.com/feed/update/urn:li:activity:7460534576394756096/', deck:true, color:'#34d399' },
     { cat:'cert', title:'Amazon Certificate', issuer:'Amazon', skills:['Operations','Safety'], icon:'box', color:'#ff9900' },
-    { cat:'award', title:'Seal of Biliteracy', issuer:'Language honor', skills:['English','Spanish'], icon:'globe', color:'#5fa8ff' },
-    { cat:'award', title:'EOF Scholar', issuer:'Educational Opportunity Fund', skills:['Scholarship'], icon:'star', color:'#ffd76a' },
+    { cat:'award', title:'NJ State Seal of Biliteracy in Spanish', issuer:'NJ Department of Education', date:'2023',
+      skills:['English','Spanish'], img:'./img/certs/seal.jpg', pdf:'./img/certs/seal-of-biliteracy.pdf', color:'#5fa8ff' },
+    { cat:'award', title:'EOF Scholar · 2023 Summer Institute', issuer:'Rutgers University · School of Arts & Sciences', date:'Jul 2023',
+      skills:['Educational Opportunity Fund','Scholarship'], img:'./img/certs/eof.jpg', pdf:'./img/certs/eof-certificate.pdf', color:'#ffd76a' },
     { cat:'award', title:'Chemistry Scholar', issuer:'Academic honor', skills:['Chemistry'], icon:'flask', color:'#2dd4bf' },
     { cat:'award', title:'Top 3 in Computer Science Class', issuer:'High school', skills:['Computer Science'], icon:'code', color:'#9b8cff' },
   ];
@@ -1818,7 +1836,14 @@
   document.getElementById('certCount').textContent=CERTS.length;
   cmGrid.innerHTML=CERTS.map((c,i)=>`
     <article class="cert" data-cat="${c.cat}" style="--i:${i};--c:${c.color}"><div class="cert-in">
-      ${c.img
+      ${c.li
+        ? `<button class="cert-img cert-li" data-li="${c.li}" aria-label="View the LinkedIn post: ${c.title}"><span class="li-post">
+            <span class="lp-h"><img src="./img/profilepic.png" alt=""><span><b>Augusto Segura</b><small>Founder &amp; CEO @ Gusify · 1st place 🏆</small></span>
+              <svg class="lp-in" viewBox="0 0 24 24"><path fill="#0a66c2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
+            <span class="lp-t">We won <b>1st place</b> at the Fiserv × Rutgers Newark Hackathon with Root 🌱</span>
+            <span class="lp-img"><img src="./img/rootpics/slide01.jpg" alt=""><em>🏆 1st Place</em></span>
+            <span class="lp-f"><i>👏❤️🎉</i> View post on LinkedIn ↗</span></span><span class="cert-shine"></span></button>`
+        : c.img
         ? `<button class="cert-img${c.deck?' deck-img':''}" data-i="${i}" aria-label="Enlarge ${c.title}"><img src="${c.img}" alt="${c.title}"><span class="cert-shine"></span></button>`
         : `<div class="cert-art"><span class="ca-k">${c.cat==='cert'?'Certificate':'Honor'}</span>${ICON[c.icon]}<span class="cert-shine"></span></div>`}
       <div class="cert-body">
@@ -1826,6 +1851,7 @@
         <h3>${c.title}</h3>
         <div class="stack">${c.skills.map(s=>`<span>${s}</span>`).join('')}</div>
         ${c.pdf?`<a class="btn more" href="${c.pdf}" target="_blank" rel="noopener">View certificate ↗</a>`:''}
+        ${c.li?`<a class="btn li-btn" href="${c.li}" target="_blank" rel="noopener" data-pv="linkedin">LinkedIn post ↗</a>`:''}
         ${c.deck?`<button class="btn more deck-open" data-pv="deck">▶ View presentation</button>`:''}
       </div>
     </div></article>`).join('');
@@ -1844,6 +1870,7 @@
   document.getElementById('certBtn').addEventListener('click',e=>openPage('certPage',e.currentTarget));
   cmGrid.addEventListener('click',e=>{
     const b=e.target.closest('.cert-img'); if(!b) return;
+    if(b.dataset.li){ window.open(b.dataset.li,'_blank','noopener'); return; }
     const withImg=CERTS.filter(c=>c.img);
     window.__lbList=withImg.map(c=>c.img); openLightbox(withImg.indexOf(CERTS[+b.dataset.i]));
   });
