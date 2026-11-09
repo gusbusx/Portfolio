@@ -530,7 +530,7 @@
   .lp-in{width:18px;height:18px;margin-left:auto;flex:none}
   .lp-t{font-size:11px;line-height:1.35;padding:2px 10px 6px}
   .lp-img{position:relative;flex:1;min-height:0;overflow:hidden}
-  .lp-img img{width:100%;height:100%;object-fit:cover;object-position:left top}
+  .lp-img img{width:100%;height:100%;object-fit:cover;object-position:50% 52%}
   .lp-img em{position:absolute;right:8px;top:8px;font-style:normal;font-size:11px;font-weight:700;color:#1d1406;background:linear-gradient(135deg,#ffd76a,#e8c877);
     padding:3px 9px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
   .lp-f{display:flex;align-items:center;justify-content:space-between;font-size:10.5px;color:#0a66c2;font-weight:600;padding:6px 10px;border-top:1px solid #eee}
@@ -1666,7 +1666,7 @@
     root:   {type:'phone', live:'https://gusbusx.github.io/root/', url:'gusbusx.github.io/root', c:'#34d399', name:'Root · live app demo'},
     deck:   {type:'video', v:'root',   url:'Root_Wellness_App.pptx',      c:'#34d399', name:'Pitch deck · 10 slides', hint:'Click to play'},
     resume: {type:'video', v:'resume', url:'Augusto_Segura_Resume.pdf',   c:'#eef2fb', name:'Resume · 2 pages', hint:'Click to open'},
-    certs:  {type:'slides', srcs:[TH('okr'),TH('python'),TH('seal'),TH('eof')], fit:'contain', url:'Certifications & honors', c:'#ffd76a', name:'8 certificates & honors', hint:'Click to open'},
+    certs:  {type:'slides', srcs:[TH('hackathon'),TH('okr'),TH('python'),TH('seal'),TH('eof')], fit:'contain', url:'Certifications & honors', c:'#ffd76a', name:'8 certificates & honors', hint:'Click to open'},
     linkedin:{type:'li', c:'#0a66c2', name:'linkedin.com/in/gusbuses'},
     github: {type:'gh',  c:'#3fb950', name:'github.com/gusbusx'},
     mail:   {type:'gm',  c:'#ea4335', name:'augustoesegura@gmail.com', hint:'Click to open inbox'},
@@ -1736,7 +1736,7 @@
   }
 
   function cardHTML(pv){
-    if(pv.type==='li') return `<div class="hp-win hp-li"><div class="cov"></div><div class="av" style="background-image:url(./img/profilepic.png)"></div>
+    if(pv.type==='li') return `<div class="hp-win hp-li"><div class="cov"></div><div class="av" style="background-image:url(./img/li-avatar.jpg)"></div>
       <div class="bd"><h4>Augusto Segura <small>· He/Him</small></h4>
       <p>Founder &amp; CEO @ Gusify · Computer Science @ Rutgers University · Full-stack developer</p>
       <div class="loc">Elizabeth, New Jersey · Contact info</div>
@@ -1838,10 +1838,10 @@
     <article class="cert" data-cat="${c.cat}" style="--i:${i};--c:${c.color}"><div class="cert-in">
       ${c.li
         ? `<button class="cert-img cert-li" data-li="${c.li}" aria-label="View the LinkedIn post: ${c.title}"><span class="li-post">
-            <span class="lp-h"><img src="./img/profilepic.png" alt=""><span><b>Augusto Segura</b><small>Founder &amp; CEO @ Gusify · 1st place 🏆</small></span>
+            <span class="lp-h"><img src="./img/li-avatar.jpg" alt=""><span><b>Augusto Segura</b><small>Founder &amp; CEO @ Gusify · 1st place 🏆</small></span>
               <svg class="lp-in" viewBox="0 0 24 24"><path fill="#0a66c2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
             <span class="lp-t">We won <b>1st place</b> at the Fiserv × Rutgers Newark Hackathon with Root 🌱</span>
-            <span class="lp-img"><img src="./img/rootpics/slide01.jpg" alt=""><em>🏆 1st Place</em></span>
+            <span class="lp-img"><img src="./img/certs/hackathon.jpg" alt="Augusto and his Root teammates holding their 1st place trophies"><em>🏆 1st Place</em></span>
             <span class="lp-f"><i>👏❤️🎉</i> View post on LinkedIn ↗</span></span><span class="cert-shine"></span></button>`
         : c.img
         ? `<button class="cert-img${c.deck?' deck-img':''}" data-i="${i}" aria-label="Enlarge ${c.title}"><img src="${c.img}" alt="${c.title}"><span class="cert-shine"></span></button>`
