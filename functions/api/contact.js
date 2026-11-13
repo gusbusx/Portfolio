@@ -1,17 +1,14 @@
 /**
- * Vercel serverless function: POST /api/contact
+ * Cloudflare Pages Function: POST /api/contact
  * Sends portfolio contact messages to your inbox through Resend (https://resend.com).
  *
- * Set these in Vercel → your project → Settings → Environment Variables:
- *   RESEND_API_KEY  (required)  your Resend key named "portfolio" (Sending access)
- *   CONTACT_TO      (optional)  where messages go. Default: augustoesegura@gmail.com
- *                               Until a domain is verified in Resend, this must be the
- *                               email you signed up to Resend with.
- *   CONTACT_FROM    (optional)  an address on a domain verified in Resend,
- *                               e.g. portfolio@gusify.net. Default: onboarding@resend.dev
+ * Set these in Cloudflare → Workers & Pages → (portfolio project) → Settings → Variables and Secrets:
+ *   RESEND_API_KEY  (Secret, required)  your Resend key named "portfolio" (Sending access)
+ *   CONTACT_TO      (Text, optional)    where messages go. Default: augustoesegura@gmail.com
+ *   CONTACT_FROM    (Text, optional)    an address on a domain verified in Resend,
+ *                                       e.g. portfolio@gusify.net. Default: onboarding@resend.dev
  *
- * In your inbox each message shows as "<Their name> via Portfolio", and hitting Reply
- * writes back to the person who sent it.
+ * Each message shows as "<Their name> via Portfolio", and Reply goes to the sender.
  */
 
 const MAX = { name: 100, email: 200, phone: 20, subject: 150, message: 5000 };
@@ -40,22 +37,20 @@ function emailHtml({ name, email, phone, subject, message, source }) {
       <a href="mailto:${esc(email)}?subject=${encodeURIComponent('Re: ' + subject)}" style="display:inline-block;margin-top:22px;background:#0b57d0;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 22px;border-radius:999px">Reply to ${esc(name.split(' ')[0])}</a>
     </div>
   </div>
-  <div style="text-align:center;color:#9ca3af;font-size:12px;margin-top:14px">Sent from augustos-portfolio.vercel.app</div>
+  <div style="text-align:center;color:#9ca3af;font-size:12px;margin-top:14px">Sent from gusify.net</div>
 </body></html>`;
 }
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
-  }
 
-  let body = req.body;
-  if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = {}; } }
-  body = body || {};
+const json = (status, data) =>
+  new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
+
+export async function onRequestPost({ request, env }) {
+  let body = {};
+  try { body = await request.json(); } catch { body = {}; }
 
   // Spam trap: real people never fill this hidden field.
-  if (clean(body.website, 200)) return res.status(200).json({ ok: true });
+  if (clean(body.website, 200)) return json(200, { ok: true });
 
   const name = clean(body.name, MAX.name);
   const email = clean(body.email, MAX.email);
@@ -69,30 +64,24 @@ module.exports = async function handler(req, res) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errors.email = 'Please enter a valid email.';
   if (phone && !/^\+\d{6,15}$/.test(phone)) errors.phone = 'That phone number doesn\u2019t look right.';
   if (message.length < 2) errors.message = 'Please write a message.';
-  if (Object.keys(errors).length) return res.status(400).json({ ok: false, errors });
+  if (Object.keys(errors).length) return json(400, { ok: false, errors });
 
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return res.status(500).json({ ok: false, error: 'Email is not set up yet.' });
+  if (!env.RESEND_API_KEY) return json(500, { ok: false, error: 'Email is not set up yet.' });
 
-  const to = process.env.CONTACT_TO || 'augustoesegura@gmail.com';
-  const fromAddr = (process.env.CONTACT_FROM || '').match(/<([^>]+)>/)?.[1] || process.env.CONTACT_FROM || 'onboarding@resend.dev';
+  const to = env.CONTACT_TO || 'augustoesegura@gmail.com';
+  const fromAddr = (env.CONTACT_FROM || '').match(/<([^>]+)>/)?.[1] || env.CONTACT_FROM || 'onboarding@resend.dev';
   const fromName = name.replace(/[<>"\\]/g, '').slice(0, 60);
 
   const text = [
-    `New message from your portfolio (${source})`,
-    '',
-    `From: ${name}`,
-    `Email: ${email}`,
-    phone ? `Phone: ${phone}` : null,
-    `Subject: ${subject}`,
-    '',
+    `New message from your portfolio (${source})`, '',
+    `From: ${name}`, `Email: ${email}`, phone ? `Phone: ${phone}` : null, `Subject: ${subject}`, '',
     message,
   ].filter((l) => l !== null).join('\n');
 
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: `${fromName} via Portfolio <${fromAddr}>`,
         to: [to],
@@ -104,11 +93,17 @@ module.exports = async function handler(req, res) {
     });
     if (!r.ok) {
       console.error('Resend error', r.status, await r.text());
-      return res.status(502).json({ ok: false, error: 'Could not send right now.' });
+      return json(502, { ok: false, error: 'Could not send right now.' });
     }
-    return res.status(200).json({ ok: true });
+    return json(200, { ok: true });
   } catch (e) {
     console.error('Resend request failed', e);
-    return res.status(502).json({ ok: false, error: 'Could not send right now.' });
+    return json(502, { ok: false, error: 'Could not send right now.' });
   }
-};
+}
+
+export function onRequest() {
+  return new Response(JSON.stringify({ ok: false, error: 'Method not allowed' }), {
+    status: 405, headers: { 'Content-Type': 'application/json', Allow: 'POST' },
+  });
+}
